@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schräger Chroma-Regenbogen-Text</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #000;
+        }
+
+        .chroma-text {
+            font-size: 5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #f0f, #ff0, #0ff, #0ff, #0ff, #ff0, #f0f);
+            background-size: 800% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: chroma 10s infinite linear;
+        }
+
+        @keyframes chroma {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chroma-text">Soon</div>
+</body>
+</html>
