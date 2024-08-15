@@ -252,7 +252,7 @@
   display: inline-block;
 }
 
-.grün::before {
+.modblau::before {
   content: '';
   position: absolute;
   top: -50%;
@@ -266,7 +266,7 @@
   animation: shine 1.5s infinite;
 }
 
-.grün span {
+.modblau span {
   position: relative;
   z-index: 2;
 }
