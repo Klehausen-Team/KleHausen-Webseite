@@ -1,252 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Kle Hausen</title>
-    <style>
-        /* Grundlegende Formatierung */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #2c3e50; /* Neue Hintergrundfarbe */
-            color: #fff;
-        }
+	<title>KleHausen - Offiziele Server Webseite</title>
 
-        /* Header */
-        header {
-            background-color: #333;
-            text-align: center;
-            padding: 20px 0;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-        }
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/stylesheet.css">
+	<link rel="stylesheet" href="fontawesome/css/all.min.css">
+	<link rel="shortcut icon" href="img/favicon.ico" />
+    <link rel="stylesheet" href="css/hover.css">
 
-        h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-            color: #ffcc00;
-        }
-
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-
-        nav ul li {
-            display: inline;
-            margin-right: 30px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 18px;
-            transition: color 0.3s;
-        }
-
-        nav ul li a:hover {
-            color: #ffcc00;
-        }
-
-        /* Hauptinhalt */
-        main {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 20px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            color: #333;
-        }
-
-        /* Serverstatusabschnitt */
-        #status-button {
-            padding: 12px 24px;
-            background-color: #333;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        #status-button:hover {
-            background-color: #444;
-        }
-
-        /* Info-Boxen */
-        section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-            color: #333;
-        }
-
-        /* Textvergrößerungseffekt */
-        p:hover {
-            font-size: 18px;
-            transition: font-size 0.3s;
-        }
-
-        /* Media Query für kleinere Bildschirme */
-        @media screen and (max-width: 768px) {
-            h1 {
-                font-size: 28px;
-            }
-            nav ul li {
-                margin-right: 15px;
-            }
-            nav ul li a {
-                font-size: 16px;
-            }
-            main {
-                max-width: 90%;
-                padding: 10px;
-            }
-        }
-    </style>
 </head>
 <body>
-    <header>
-        <style>
-            /* Grundlegende Formatierung */
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #2c3e50;
-                color: #fff;
-            }
-    
-            /* Header */
-            header {
-                background-color: #333;
-                text-align: center;
-                padding: 20px 0;
-                border-bottom-left-radius: 20px;
-                border-bottom-right-radius: 20px;
-            }
-    
-            h1 {
-                font-size: 36px;
-                margin-bottom: 10px;
-                color: #ffcc00;
-            }
-    
-            nav ul {
-                list-style: none;
-                margin: 0;
-                padding: 0;
-                text-align: center;
-            }
-    
-            nav ul li {
-                display: inline;
-                margin-right: 30px;
-            }
-    
-            nav ul li a {
-                color: white;
-                text-decoration: none;
-                font-weight: bold;
-                font-size: 18px;
-                transition: color 0.3s;
-            }
-    
-            nav ul li a:hover {
-                color: #ffcc00;
-            }
-    
-            /* Hauptinhalt */
-            main {
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 20px;
-                background-color: rgba(255, 255, 255, 0.8);
-                border-radius: 20px;
-                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-                color: #333;
-            }
-    
-            /* Spielmodi */
-            .game-mode {
-                background-color: #fff;
-                padding: 15px;
-                border-radius: 10px;
-                box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-                margin-bottom: 20px;
-                transition: transform 0.3s;
-            }
-    
-            .game-mode:hover {
-                transform: scale(1.05);
-            }
-    
-            .mode-name {
-                font-weight: bold;
-                font-size: 24px;
-                margin-bottom: 5px;
-            }
-    
-            .mode-description {
-                font-size: 16px;
-                color: #888;
-            }
-    
-            /* Media Query für kleinere Bildschirme */
-            @media screen and (max-width: 768px) {
-                h1 {
-                    font-size: 28px;
-                }
-                nav ul li {
-                    margin-right: 15px;
-                }
-                nav ul li a {
-                    font-size: 16px;
-                }
-                main {
-                    max-width: 90%;
-                    padding: 10px;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Startseite</a></li>
-                    <li><a href="game.html">Modi</a></li>
-                    <li><a href="tictactoe.html">Tic Tac Toe</a></li>
-                    <img src="KleHausen_logo.png" style="width: 5vw; min-width: 14px;" />
-                    <li><a href="team.html">⠀ ⠀ Unser Team</a></li>
-                    <li><a href="info.html">Infos</a></li>
-                    <li><a href="support.html">Support</a></li>
-                </ul>
-            </nav>
-        <h1>Willkommen auf Kle Hausen</h1>
-    </header>
-    <main>
-        <section id="home">
-            <h2>Startseite</h2>
-            <p>Willkommen auf unserem Minecraft Server! Hier findest du Informationen und Updates zu unserem Server.</p>
-        </section>
-        <section id="info">
-            <h2>Informationen</h2>
-            <p> wir arbeiten grade an einem neuen server.</p>
-        </section>
-      
-    <script>
-        // Funktion zum Überprüfen des Serverstatus
-        document.getElementById('status-button').addEventListener('click', function () {
-            const statusMessage = document.getElementById('status-message');
-            // Hier könnten Sie eine API-Anfrage an Ihren Serverstatus-Endpunkt senden und die Antwort verarbeiten
-            statusMessage.textContent = 'Der Server ist online.';
-        });
-    </script>
+	<div class="container">
+	  <div class="snow">
+		<div class="logo">
+			<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><img src="img/minecraft_title.png" alt="Bockwurst Logo"></a>
+		</div>
+
+
+		<div class="playercount">
+			<p>Spiel mit <span class="sip" data-ip="mc.klehausen.de" data-port="25565">
+			</span> anderen Spielern auf <span class="ip">mc.klehausen.de</span></p>
+		</div>
+		<hr>
+		<div class="items">
+			<a href="Infos.html" class="item forum"> <i class="fa fa-info fa-4x" alt="Forum icon" style="color:#ffffff"></i>
+				<div>
+					<p class="title">Infos </p>
+				</div>
+			</a>
+			
+			<a href="" class="item store"> <i class="fa fa-shopping-cart fa-4x" alt="Store icon" style="color:#ffffff"></i>
+				<div>
+					<p class="title">Store</p>
+				</div>
+			</a>
+			
+			<a href="https://dsc.gg/kle" class="item forums"> <i class="fab fa-discord fa-4x" alt="Discord icon" style="color:#ffffff"></i>
+				<div>
+					<p class="title">Discord</p>
+				</div>
+			</a>
+
+	  </div>	
+	</div>
+	<div class="items">
+		<a href="regeln.html" class="item regeln"> <i class="fa fa-book fa-4x" alt="regel icon" style="color:#ffffff"></i>
+			<div>
+				<p class="title">Regeln </p>
+			</div>
+		</a>
+		
+  </div>	
+</div>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="js/firefly.js" type="text/javascript"></script>
+	<script src="js/main.js" type="text/javascript"></script>
 </body>
 </html>
+

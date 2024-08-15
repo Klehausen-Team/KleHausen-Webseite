@@ -1,284 +1,477 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tic-Tac-Toe Game</title>
+    <title>KleHausen - Offizielle Server Webseite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    <link rel="shortcut icon" href="img/favicon.ico" />
     <style>
-        /* Gemeinsame Formatierung */
+        /* Grundlegende Formatierung */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Open Sans', Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #2c3e50;
-            color: #fff;
-        }
-
-        header {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            border-radius: 0 0 20px 20px;
-        }
-
-        h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-
-        nav ul li {
-            display: inline;
-            margin-right: 30px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 18px;
-            transition: color 0.3s;
-        }
-
-        nav ul li a:hover {
-            color: #ffcc00;
-        }
-
-        /* Tic-Tac-Toe Spiel */
-        .game-container {
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: calc(100vh - 150px);
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .logo img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .playercount p {
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .items {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .item {
+            text-decoration: none;
+            color: #ffffff;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .item i {
+            margin-right: 10px;
+        }
+
+        /* Tic Tac Toe */
+        #tic-tac-toe {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            background-color: rgba(52, 73, 94, 0.8);
         }
 
         .board {
             display: grid;
             grid-template-columns: repeat(3, 100px);
-            grid-gap: 2px;
-            background-color: #fff;
-            border: 2px solid #000;
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin: 20px auto;
+            justify-content: center;
         }
 
         .cell {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             width: 100px;
             height: 100px;
-            font-size: 36px;
-            background-color: #3498db;
-            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            background-color: #ffffff;
+            border: 2px solid #ccc;
             cursor: pointer;
-            transition: background-color 0.3s;
+            color: #000000;
         }
 
         .cell:hover {
-            background-color: #2980b9;
+            background-color: #f9f9f9;
+        }
+
+        .winner {
+            grid-column: span 3;
+            text-align: center;
+            font-size: 1.5em;
+            margin-top: 10px;
+            color: #ffcc00;
+        }
+
+        .restart-button, .submit-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #ffcc00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #000000;
+            transition: background-color 0.3s;
+        }
+
+        .restart-button:hover, .submit-button:hover {
+            background-color: #e0a700;
+        }
+
+        #leaderboard {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(52, 73, 94, 0.8);
+            color: #ffffff;
+            text-align: left;
+        }
+
+        #leaderboard h3 {
+            margin: 0;
+        }
+
+        #leaderboard ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #leaderboard li {
+            margin: 5px 0;
+        }
+
+        .input-group {
+            margin-top: 10px;
+        }
+
+        .input-group input {
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html">Startseite</a></li>
-                <li><a href="game.html">Modi</a></li>
-                <li><a href="tictactoe.html">Tic Tac Toe</a></li>
-                <img src="KleHausen_logo.png" style="width: 5vw; min-width: 14px;" />
-                <li><a href="team.html">⠀ ⠀ Unser Team</a></li>
-                <li><a href="info.html">Infos</a></li>
-                <li><a href="support.html">Support</a></li>
-            </ul>
-        </nav>
-        <h1>Tic-Tac-Toe Spiel</h1>
-    </header>
-    <div class="game-container">
-        <div class="board">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
+    <div class="container">
+        <div class="logo">
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">
+                <img src="img/minecraft_title.png" alt="Bockwurst Logo">
+            </a>
         </div>
+
+        <div class="playercount">
+            <p>Spiel mit <span class="sip" data-ip="mc.klehausen.de" data-port="25565"></span> anderen Spielern auf <span class="ip">mc.klehausen.de</span></p>
+        </div>
+        
+        <hr>
+
+        <!-- Tic Tac Toe Game -->
+        <section id="tic-tac-toe">
+            <h2>Tic Tac Toe</h2>
+            <div class="board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+            <div class="winner" id="winner"></div>
+            <button class="restart-button" id="restart">Neustarten</button>
+
+            <div id="difficulty">
+                <label for="difficulty-select">Schwierigkeitsgrad wählen:</label>
+                <select id="difficulty-select">
+                    <option value="easy">Einfach</option>
+                    <option value="medium">Mittel</option>
+                    <option value="hard">Hard</option>
+                    <option value="ultra">Super Hard</option>
+                </select>
+            </div>
+
+            <div id="name-form" style="display: none;">
+                <div class="input-group">
+                    <input type="text" id="player-name" placeholder="Dein Name">
+                </div>
+                <button class="submit-button" id="submit-name">Eintragen</button>
+            </div>
+        </section>
+
+        <!-- Leaderboard -->
+        <section id="leaderboard">
+            <h3>Leaderboard (Super Hard)</h3>
+            <ul id="leaderboard-list">
+                <!-- Leaderboard Einträge werden hier dynamisch hinzugefügt -->
+            </ul>
+        </section>
     </div>
+
     <script>
+        const board = document.querySelector('.board');
         const cells = document.querySelectorAll('.cell');
-        let currentPlayer = 'X';
-        let gameActive = true;
+        const winnerElement = document.getElementById('winner');
+        const restartButton = document.getElementById('restart');
+        const difficultySelect = document.getElementById('difficulty-select');
+        const nameForm = document.getElementById('name-form');
+        const playerNameInput = document.getElementById('player-name');
+        const submitNameButton = document.getElementById('submit-name');
+        const leaderboardList = document.getElementById('leaderboard-list');
+        let currentPlayer = 'X'; // Der menschliche Spieler ist 'X'
+        let boardState = ['', '', '', '', '', '', '', '', ''];
+        let difficulty = 'easy'; // Standardmäßig auf einfach
 
-        cells.forEach(cell => {
-            cell.addEventListener('click', cellClick, { once: true });
-        });
-
-        function cellClick(e) {
-            if (!gameActive) return;
-
-            const cell = e.target;
-            cell.textContent = currentPlayer;
-            if (checkWin()) {
-                announceWinner();
-                gameActive = false;
-                return;
-            }
-            if (checkDraw()) {
-                announceDraw();
-                gameActive = false;
-                return;
-            }
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-
-            if (currentPlayer === 'O') {
-                setTimeout(computerMove, 500);
-            }
-        }
-
-        function computerMove() {
-            if (!gameActive) return;
-
-            const emptyCells = Array.from(cells).filter(cell => !cell.textContent);
-            if (emptyCells.length === 0) return;
-
-            const randomIndex = Math.floor(Math.random() * emptyCells.length);
-            const selectedCell = emptyCells[randomIndex];
-            selectedCell.textContent = currentPlayer;
-            if (checkWin()) {
-                announceWinner();
-                gameActive = false;
-                return;
-            }
-            if (checkDraw()) {
-                announceDraw();
-                gameActive = false;
-                return;
-            }
-            currentPlayer = 'X';
-        }
-
-        function checkWin() {
-            const winningCombinations = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8],
-                [0, 3, 6], [1, 4, 7], [2, 5, 8],
-                [0, 4, 8], [2, 4, 6]
+        const checkWinner = () => {
+            const winPatterns = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6],
             ];
 
-            for (const combination of winningCombinations) {
-                const [a, b, c] = combination;
-                if (cells[a].textContent && cells[a].textContent === cells[b].textContent && cells[a].textContent === cells[c].textContent) {
-                    return true;
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
+                    return boardState[a];
                 }
             }
-            return false;
-        }
 
-        function checkDraw() {
-            return Array.from(cells).every(cell => cell.textContent);
-        }
+            return boardState.includes('') ? null : 'Tie';
+        };
 
-        function announceWinner() {
-            if (currentPlayer === 'X') {
-                alert('Du hast gewonnen!');
+        const makeMove = (index, player) => {
+            boardState[index] = player;
+            cells[index].textContent = player;
+        };
+
+        const aiMove = () => {
+            if (difficulty === 'easy') {
+                makeRandomMove();
+            } else if (difficulty === 'medium') {
+                makeHeuristicMove();
+            } else if (difficulty === 'hard') {
+                makeMinimaxMove();
+            } else if (difficulty === 'ultra') {
+                makeAlphaBetaMove();
+            }
+        };
+
+        const makeRandomMove = () => {
+            const emptyIndices = boardState.map((v, i) => v === '' ? i : null).filter(v => v !== null);
+            const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+            if (randomIndex !== undefined) makeMove(randomIndex, 'O');
+        };
+
+        const makeHeuristicMove = () => {
+            // Einfache Heuristik für "Mittel"
+            const emptyIndices = boardState.map((v, i) => v === '' ? i : null).filter(v => v !== null);
+            // Priorisiere das Blockieren eines möglichen Gewinns oder das Erzielen eines Gewinns
+            for (const index of emptyIndices) {
+                boardState[index] = 'O';
+                if (checkWinner() === 'O') {
+                    makeMove(index, 'O');
+                    return;
+                }
+                boardState[index] = '';
+            }
+            for (const index of emptyIndices) {
+                boardState[index] = 'X';
+                if (checkWinner() === 'X') {
+                    makeMove(index, 'O');
+                    return;
+                }
+                boardState[index] = '';
+            }
+            makeRandomMove();
+        };
+
+        const makeMinimaxMove = () => {
+            const bestMove = getBestMoveMinimax();
+            if (bestMove !== null) makeMove(bestMove, 'O');
+        };
+
+        const getBestMoveMinimax = () => {
+            let bestScore = -Infinity;
+            let move;
+            for (let i = 0; i < boardState.length; i++) {
+                if (boardState[i] === '') {
+                    boardState[i] = 'O';
+                    let score = minimax(boardState, false);
+                    boardState[i] = '';
+                    if (score > bestScore) {
+                        bestScore = score;
+                        move = i;
+                    }
+                }
+            }
+            return move;
+        };
+
+        const minimax = (board, isMaximizing) => {
+            const winner = checkWinner();
+            if (winner === 'O') return 10;
+            if (winner === 'X') return -10;
+            if (winner === 'Tie') return 0;
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'O';
+                        let score = minimax(board, false);
+                        board[i] = '';
+                        bestScore = Math.max(score, bestScore);
+                    }
+                }
+                return bestScore;
             } else {
-                alert('Der Computer hat gewonnen!');
+                let bestScore = Infinity;
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'X';
+                        let score = minimax(board, true);
+                        board[i] = '';
+                        bestScore = Math.min(score, bestScore);
+                    }
+                }
+                return bestScore;
             }
-        }
+        };
 
-        function announceDraw() {
-            alert('Das Spiel endete unentschieden.');
-        }
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Tic-Tac-Toe Game</title>
-    <style>
-        /* ... (bereits vorhandener CSS-Stil) ... */
-        
-        /* Hinzufügen der Gewinnanimation */
-        .winner {
-            background-color: #27ae60;
-            color: #fff;
-            animation: winnerBlink 1s infinite;
-        }
+        const makeAlphaBetaMove = () => {
+            const bestMove = getBestMoveAlphaBeta();
+            if (bestMove !== null) makeMove(bestMove, 'O');
+        };
 
-        @keyframes winnerBlink {
-            0%, 100% {
-                opacity: 1;
+        const getBestMoveAlphaBeta = () => {
+            let bestScore = -Infinity;
+            let move;
+            const alpha = -Infinity;
+            const beta = Infinity;
+            for (let i = 0; i < boardState.length; i++) {
+                if (boardState[i] === '') {
+                    boardState[i] = 'O';
+                    let score = minimaxAlphaBeta(boardState, false, alpha, beta);
+                    boardState[i] = '';
+                    if (score > bestScore) {
+                        bestScore = score;
+                        move = i;
+                    }
+                }
             }
-            50% {
-                opacity: 0.5;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- ... (bereits vorhandener HTML-Inhalt) ... -->
-    <script>
-        const cells = document.querySelectorAll('.cell');
-        let currentPlayer = 'X';
-        let gameActive = true;
+            return move;
+        };
 
-        cells.forEach(cell => {
-            cell.addEventListener('click', cellClick, { once: true });
+        const minimaxAlphaBeta = (board, isMaximizing, alpha, beta) => {
+            const winner = checkWinner();
+            if (winner === 'O') return 10;
+            if (winner === 'X') return -10;
+            if (winner === 'Tie') return 0;
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'O';
+                        let score = minimaxAlphaBeta(board, false, alpha, beta);
+                        board[i] = '';
+                        bestScore = Math.max(score, bestScore);
+                        alpha = Math.max(alpha, score);
+                        if (beta <= alpha) break;
+                    }
+                }
+                return bestScore;
+            } else {
+                let bestScore = Infinity;
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'X';
+                        let score = minimaxAlphaBeta(board, true, alpha, beta);
+                        board[i] = '';
+                        bestScore = Math.min(score, bestScore);
+                        beta = Math.min(beta, score);
+                        if (beta <= alpha) break;
+                    }
+                }
+                return bestScore;
+            }
+        };
+
+        const handleClick = (e) => {
+            const index = e.target.dataset.index;
+            if (!boardState[index] && !winnerElement.textContent && currentPlayer === 'X') {
+                makeMove(index, 'X');
+                const winner = checkWinner();
+                if (winner) {
+                    winnerElement.textContent = winner === 'Tie' ? 'Es ist ein Unentschieden!' : `${winner} gewinnt!`;
+                    if (difficulty === 'ultra' && winner === 'X') {
+                        nameForm.style.display = 'block';
+                    }
+                    return;
+                }
+                currentPlayer = 'O';
+                aiMove();
+                const aiWinner = checkWinner();
+                if (aiWinner) {
+                    winnerElement.textContent = aiWinner === 'Tie' ? 'Es ist ein Unentschieden!' : `${aiWinner} gewinnt!`;
+                    // Bei einem AI-Gewinn oder Unentschieden wird das Namensformular nicht angezeigt
+                    if (aiWinner === 'X') {
+                        nameForm.style.display = 'block';
+                    }
+                }
+                currentPlayer = 'X';
+            }
+        };
+
+        const restartGame = () => {
+            boardState = ['', '', '', '', '', '', '', '', ''];
+            cells.forEach(cell => cell.textContent = '');
+            winnerElement.textContent = '';
+            currentPlayer = 'X';
+            nameForm.style.display = 'none'; // Verstecke das Namensformular bei Neustart
+        };
+
+        const saveToLeaderboard = (name) => {
+            const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+            leaderboard.push(name);
+            leaderboard.sort(); // Hier sortieren wir alphabetisch. Du kannst dies nach Punkten oder anderen Kriterien ändern.
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+            updateLeaderboard();
+        };
+
+        const updateLeaderboard = () => {
+            const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+            leaderboardList.innerHTML = leaderboard.map(name => `<li>${name}</li>`).join('');
+        };
+
+        difficultySelect.addEventListener('change', (e) => {
+            difficulty = e.target.value;
         });
 
-        function cellClick(e) {
-            if (!gameActive) return;
-
-            const cell = e.target;
-            cell.textContent = currentPlayer;
-            if (checkWin()) {
-                announceWinner();
-                gameActive = false;
-                return;
+        submitNameButton.addEventListener('click', () => {
+            const name = playerNameInput.value.trim();
+            if (name) {
+                saveToLeaderboard(name);
+                playerNameInput.value = '';
+                nameForm.style.display = 'none';
             }
-            if (checkDraw()) {
-                announceDraw();
-                gameActive = false;
-                return;
-            }
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        });
 
-            if (currentPlayer === 'O') {
-                setTimeout(computerMove, 500);
-            }
-        }
+        restartButton.addEventListener('click', restartGame);
 
-        function computerMove() {
-            if (!gameActive) return;
-
-            const emptyCells = Array.from(cells).filter(cell => !cell.textContent);
-            if (emptyCells.length === 0) return;
-
-            const randomIndex = Math.floor(Math.random() * emptyCells.length);
-            const selectedCell = emptyCells[randomIndex];
-            selectedCell.textContent = currentPlayer;
-            if (checkWin()) {
-                announceWinner();
-                gameActive = false;
-                return;
-            }
-            if (checkDraw()) {
-                announceDraw();
-                gameActive = false;
-                return;
-            }
-            currentPlayer = 'X';
-        }
-
-        /* Rest des Codes (checkWin, checkDraw, announceWinner, announceDraw) bleibt unverändert */
+        cells.forEach(cell => cell.addEventListener('click', handleClick));
+        document.addEventListener('DOMContentLoaded', updateLeaderboard); // Leaderboard beim Laden der Seite aktualisieren
     </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="js/firefly.js" type="text/javascript"></script>
+<script src="js/main.js" type="text/javascript"></script>
 </body>
 </html>
-
