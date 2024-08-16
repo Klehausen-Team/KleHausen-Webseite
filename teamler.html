@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="css/farbe.css">
     <link rel="stylesheet" href="css/rainbow-shine.css">
     <style>
-        /* Grundlegende Formatierung */
         body {
             font-family: 'Koryaka', Arial, sans-serif;
             margin: 0;
@@ -23,11 +22,10 @@
             background-color: #2c3e50;
             color: #000000;
             position: relative;
-            padding-bottom: 100px; /* Platz für den Platzhalter */
-            overflow: hidden; /* Verhindert Scrollbars auf dem gesamten Body */
+            padding-bottom: 100px;
+            overflow: hidden;
         }
 
-        /* Header */
         header {
             background-color: #333;
             text-align: center;
@@ -66,35 +64,32 @@
             color: #ffcc00;
         }
 
-        /* Teammitglieder Container */
         .team-container {
-            max-width: 1200px; /* Maximale Breite für Container */
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Drei Spalten */
-            gap: 20px; /* Abstand zwischen den Boxen */
-            max-height: 600px; /* Maximale Höhe des Containers */
-            overflow-y: scroll; /* Scrollen aktivieren */
-            scrollbar-width: thin; /* Für Firefox: dünne Scrollbar */
-            scrollbar-color: transparent transparent; /* Für Firefox: Scrollbar transparent */
+            grid-template-columns: repeat(4, 1fr); /* Vier Spalten */
+            gap: 20px;
+            max-height: 600px;
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
         }
 
-        /* Scrollbar ausblenden für Webkit-basierte Browser */
         .team-container::-webkit-scrollbar {
-            width: 0; /* Breite der Scrollbar auf 0 setzen */
-            background: transparent; /* Hintergrund auf transparent setzen */
+            width: 0;
+            background: transparent;
         }
 
-        /* Teammitglieder */
         .member-box {
-            background-color: rgba(255, 255, 255, 0.2); /* Hellerer, durchsichtiger Hintergrund */
-            padding: 20px; /* Innenabstand */
-            border-radius: 10px; /* Abgerundete Ecken */
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Schatten für bessere Sichtbarkeit */
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s;
             font-family: 'Koryaka', Arial, sans-serif;
-            text-align: center; /* Zentriert den Text */
+            text-align: center;
         }
 
         .member-box:hover {
@@ -102,48 +97,52 @@
         }
 
         .member-name {
-            font-weight: 700; /* Stärkeres Gewicht für den Namen */
-            font-size: 18px;  /* Größere Schriftgröße für den Namen */
+            font-weight: 700;
+            font-size: 18px;
             margin-bottom: 10px;
-            color: #000000; /* Dunkle Farbe für besseren Kontrast auf hellem Hintergrund */
+            color: #000000;
         }
 
         .member-role {
-            font-weight: 600; /* Stärkeres Gewicht für die Rolle */
-            font-size: 16px;  /* Größere Schriftgröße für die Rolle */
-            color: #ffcc00; /* Gelbe Farbe für Kontrast */
+            font-weight: 600;
+            font-size: 16px;
+            color: #ffcc00;
         }
 
         .member-box img {
-            width: 80px; /* Größere Größe der Bilder */
-            height: 80px; /* Größere Größe der Bilder */
+            width: 80px;
+            height: 80px;
             border-radius: 5px;
-            margin-bottom: 10px; /* Abstand zwischen Bild und Text */
+            margin-bottom: 10px;
         }
 
-        /* Media Query für kleinere Bildschirme */
+        @media screen and (max-width: 1024px) {
+            .team-container {
+                grid-template-columns: repeat(3, 1fr); /* Drei Spalten für mittlere Bildschirme */
+            }
+        }
+
         @media screen and (max-width: 768px) {
             .team-container {
-                grid-template-columns: 1fr; /* Eine Spalte auf kleinen Bildschirmen */
-                gap: 15px; /* Reduzierter Abstand zwischen den Boxen auf kleinen Bildschirmen */
-                max-height: none; /* Keine Begrenzung der Höhe auf kleinen Bildschirmen */
+                grid-template-columns: repeat(2, 1fr); /* Zwei Spalten für kleine Bildschirme */
+                gap: 15px;
+                max-height: none;
             }
             .member-box {
-                padding: 15px; /* Reduzierter Innenabstand auf kleinen Bildschirmen */
+                padding: 15px;
             }
             .member-box img {
-                width: 60px; /* Größere Bilder auf kleinen Bildschirmen */
-                height: 60px; /* Größere Bilder auf kleinen Bildschirmen */
+                width: 60px;
+                height: 60px;
             }
             .member-name {
-                font-size: 16px; /* Größere Schriftgröße für den Namen auf kleinen Bildschirmen */
+                font-size: 16px;
             }
             .member-role {
-                font-size: 14px; /* Größere Schriftgröße für die Rolle auf kleinen Bildschirmen */
+                font-size: 14px;
             }
         }
 
-        /* Scroll Hinweis */
         .scroll-hint {
             position: fixed;
             bottom: 20px;
@@ -158,6 +157,7 @@
             padding: 10px 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         .scroll-hint::after {
             content: '';
             display: block;
@@ -183,20 +183,11 @@
                 <p>Spiel mit <span class="sip" data-ip="mc.klehausen.de" data-port="25565"></span> anderen Spielern auf <span class="ip">mc.klehausen.de</span></p>
             </div>
             <hr>
-            <!-- Entfernen des Teamler-Buchs -->
-            <!-- <div class="items">
-                <a href="Infos-1.html" class="item regeln"><i class="penis"> <i class="fa fa-book fa-4x" alt="regel icon" style="color:#ffffff"></i>
-                    <div>
-                        <p class="title">Teamler</p>
-                    </div>
-                </a>
-            </div> -->
 
             <main>
                 <section id="team">
                     <div class="titleg">Teammitglieder</div>
                     <div class="team-container">
-                        <!-- Teammitglied Boxen hier -->
                         <div class="member-box">
                             <img src="img/teamler/legopuck.png" alt="LegoPuck">
                             <div class="member-name"><a class="blau">LegoPuck</a></div>
@@ -208,16 +199,15 @@
                             <div class="member-role">Owner</div>
                         </div>
                         <div class="member-box">
+                            <img src="img/teamler/Scorezy.png" alt="Scorezy">
+                            <div class="member-name"><a class="blau">Scorezy</a></div>
+                            <div class="member-role">Co-Owner</div>
+                        </div>
+                        <div class="member-box">
                             <img src="img/teamler/fnafhcyt.png" alt="Fnaf_hcYT">
                             <div class="member-name"><a class="blau">Fnaf_hcYT</a></div>
                             <div class="member-role">MC Leitung</div>
                         </div>
-                         <div class="member-box">
-                            <img src="img/teamler/Scorezy.png" alt="Scorezy">
-                            <div class="member-name"><a class="blau">Scorezy</a></div>
-                            <div class="member-role">Sigma</div>
-                        </div>
-                        <!-- Neue Mitglieder -->
                         <div class="member-box">
                             <img src="img/teamler/Daniel_Bestik.png" alt="Daniel_Bestik">
                             <div class="member-name"><a class="orange">Daniel_Bestik</a></div>
@@ -274,13 +264,10 @@
                             <div class="member-role">Support</div>
                         </div>
                     </div>
-
                 </section>
             </main>
         </div>
     </div>
-
- 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="js/firefly.js" type="text/javascript"></script>
