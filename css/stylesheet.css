@@ -1,14 +1,6 @@
 * {
 	box-sizing: border-box;
 }
-.credits {
-    position: fixed;
-    bottom: 5px;
-    right: 10px;
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.1); /* White text with 10% opacity */
-    z-index: 9999; /* Ensures it stays on top */
-}
 
 body {
 	background: linear-gradient(rgba(20, 26, 35,0.55),rgba(20, 26, 35, 0.55)),
