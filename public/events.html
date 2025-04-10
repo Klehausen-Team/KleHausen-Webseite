@@ -108,12 +108,31 @@
             `;
         }
 
-        function calculateDuration(start, end) {
-            const diff = end - start;
-            const hours = Math.floor(diff / 3600000);
-            if (hours < 24) return `Duration: ${hours} hour${hours !== 1 ? 's' : ''}`;
-            const days = Math.floor(hours / 24);
-            return `Duration: ${days} day${days !== 1 ? 's' : ''}`;
+        function calculateDuration(startTimestamp, endTimestamp) {
+            const startDate = new Date(startTimestamp);
+            const endDate = new Date(endTimestamp);
+            
+            // Calculate calendar days difference
+            const startDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+            const endDay = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+            const dayDiff = Math.ceil((endDay - startDay) / (1000 * 60 * 60 * 24));
+            
+            // Calculate total hours
+            const totalMs = endDate - startDate;
+            const totalHours = Math.floor(totalMs / 3600000);
+            
+            // Calculate remaining hours after full calendar days
+            const remainingHours = totalHours % 24;
+            
+            let durationParts = [];
+            if (dayDiff > 0) {
+                durationParts.push(`${dayDiff} day${dayDiff !== 1 ? 's' : ''}`);
+            }
+            if (remainingHours > 0 || dayDiff === 0) {
+                durationParts.push(`${remainingHours} hour${remainingHours !== 1 ? 's' : ''}`);
+            }
+            
+            return `Duration: ${durationParts.join(' ')}`;
         }
 
         function calculateTimeDifference(now, target) {
