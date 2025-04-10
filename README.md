@@ -22,10 +22,6 @@ Falls du den Code verwenden möchtest, kontaktiere uns bitte vorher, um die Bedi
 Wir freuen uns über jede Art von Unterstützung!  
 Falls du Vorschläge, Verbesserungen oder Fehlerberichte hast, zögere nicht, ein [Issue](https://github.com/Klehausen-Team/KleHausen-Webseite/issues) zu erstellen oder einen Pull Request einzureichen.
 
-### 💡 So kannst du beitragen:
-1. Forke das Repository.
-2. Erstelle einen neuen Branch für deine Änderungen.
-3. Reiche einen Pull Request ein, nachdem du deine Änderungen getestet hast.
 
 ## Lizenz
 
