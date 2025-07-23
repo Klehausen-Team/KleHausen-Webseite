@@ -1,0 +1,118 @@
+{
+  "name": "KleHausen - Discord Community & Projekte",
+  "short_name": "KleHausen",
+  "description": "Eine kreative Discord Community von 4-8 Content Creators, die gemeinsam innovative Projekte entwickeln und Content produzieren.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#ff7b00",
+  "orientation": "portrait-primary",
+  "categories": ["social", "entertainment", "productivity"],
+  "lang": "de",
+  "dir": "ltr",
+  "splash_pages": null,
+  "icons": [
+    {
+      "src": "icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "KleHausen Desktop Ansicht"
+    },
+    {
+      "src": "screenshots/mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "KleHausen Mobile Ansicht"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Projekte",
+      "short_name": "Projekte",
+      "description": "Zeige alle Projekte",
+      "url": "/#projekte",
+      "icons": [
+        {
+          "src": "icons/shortcut-projects.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Discord",
+      "short_name": "Discord",
+      "description": "Discord Server beitreten",
+      "url": "https://dsc.gg/kle",
+      "icons": [
+        {
+          "src": "icons/shortcut-discord.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Admin Panel",
+      "short_name": "Admin",
+      "description": "Website Verwaltung (nur für Admins)",
+      "url": "/admin/index.html",
+      "icons": [
+        {
+          "src": "icons/shortcut-admin.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

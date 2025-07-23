@@ -1,0 +1,199 @@
+/* Advanced Splash Screen für verschiedene Geräte */
+
+/* Android Splash Screen */
+@media (prefers-color-scheme: dark) and (display-mode: standalone) {
+    .splash-screen {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #2d2d2d 50%, #1a1a1a 75%, #0a0a0a 100%);
+    }
+}
+
+/* iOS Splash Screen Spezifikationen */
+@media (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) {
+    .splash-content {
+        transform: scale(0.9);
+    }
+}
+
+@media (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) {
+    .splash-content {
+        transform: scale(1.1);
+    }
+}
+
+/* iPad Splash Screen */
+@media (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) {
+    .splash-logo {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .splash-logo i {
+        font-size: 4rem;
+    }
+    
+    .splash-title {
+        font-size: 3rem;
+    }
+    
+    .splash-loading {
+        width: 300px;
+    }
+}
+
+/* Desktop PWA */
+@media (min-width: 1024px) and (display-mode: standalone) {
+    .splash-screen {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 30%, #ff7b00 50%, #2d2d2d 70%, #1a1a1a 100%);
+    }
+    
+    .splash-content {
+        transform: scale(1.2);
+    }
+    
+    .splash-logo {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .splash-logo i {
+        font-size: 5rem;
+    }
+    
+    .splash-title {
+        font-size: 3.5rem;
+    }
+    
+    .splash-loading {
+        width: 400px;
+    }
+}
+
+/* Windows PWA Anpassungen */
+@media (-ms-high-contrast: none) {
+    .splash-screen {
+        background: linear-gradient(135deg, #1a1a1a 0%, #ff7b00 50%, #1a1a1a 100%);
+    }
+}
+
+/* MacOS PWA Anpassungen */
+@media (prefers-color-scheme: dark) and (-webkit-min-device-pixel-ratio: 2) {
+    .splash-logo {
+        box-shadow: 0 30px 60px rgba(255, 123, 0, 0.5);
+    }
+}
+
+/* Notch Support für neue iPhones */
+@supports (padding: max(0px)) {
+    .splash-content {
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+}
+
+/* Spezielle Animationen für verschiedene Plattformen */
+.splash-screen.android {
+    animation: androidFadeIn 1s ease-out;
+}
+
+.splash-screen.ios {
+    animation: iosFadeIn 0.8s ease-out;
+}
+
+.splash-screen.windows {
+    animation: windowsFadeIn 1.2s ease-out;
+}
+
+@keyframes androidFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes iosFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes windowsFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.9) rotate(1deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Zusätzliche Loading-Indikatoren */
+.splash-platform-info {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* Herzschlag Animation für Logo */
+.splash-logo.heartbeat {
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    14% { transform: scale(1.1); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.1); }
+    70% { transform: scale(1); }
+}
+
+/* Regenbogen Loading Bar für besondere Anlässe */
+.splash-loading.rainbow::before {
+    background: linear-gradient(90deg, 
+        #ff0000, #ff8000, #ffff00, #80ff00, 
+        #00ff00, #00ff80, #00ffff, #0080ff, 
+        #0000ff, #8000ff, #ff00ff, #ff0080);
+    animation: rainbowMove 2s linear infinite;
+}
+
+@keyframes rainbowMove {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Performance Optimierungen */
+.splash-screen * {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+/* Memory Management */
+.splash-screen.fade-out * {
+    will-change: auto;
+}
+
+/* Ripple Animation für Android */
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}

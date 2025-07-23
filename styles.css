@@ -13,8 +13,8 @@
     --background-color: #0f0f0f;
     --surface-color: #1e1e1e;
     --text-primary: #ffffff;
-    --text-secondary: #b3b3b3;
-    --text-muted: #666666;
+    --text-secondary: #d1d1d1;  /* Hellerer für bessere Lesbarkeit */
+    --text-muted: #888888;      /* Kontrastreicher */
     --border-color: #333333;
     --success-color: #00ff88;
     --warning-color: #ffaa00;
@@ -26,14 +26,38 @@
     --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);
     --border-radius: 8px;
     --transition: all 0.3s ease;
+    
+    /* Verbesserte Typografie für mobile Lesbarkeit */
+    --font-size-xs: 0.75rem;     /* 12px */
+    --font-size-sm: 0.875rem;    /* 14px */
+    --font-size-base: 1rem;      /* 16px - Basis für gute Lesbarkeit */
+    --font-size-lg: 1.125rem;    /* 18px */
+    --font-size-xl: 1.25rem;     /* 20px */
+    --font-size-2xl: 1.5rem;     /* 24px */
+    --font-size-3xl: 1.875rem;   /* 30px */
+    --font-size-4xl: 2.25rem;    /* 36px */
+    
+    /* Verbesserte Line Heights für Lesbarkeit */
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.625;
+    --line-height-loose: 2;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
     background-color: var(--background-color);
     color: var(--text-primary);
-    line-height: 1.6;
+    line-height: var(--line-height-normal);
     overflow-x: hidden;
+    font-size: var(--font-size-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    
+    /* PWA Safe Area Support */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 .container {
@@ -790,6 +814,8 @@ section {
     .hero {
         min-height: 90vh;
         padding: 1rem 0;
+        /* PWA Safe Area */
+        padding-top: max(1rem, env(safe-area-inset-top));
     }
 
     .hero-container {
@@ -797,24 +823,33 @@ section {
     }
 
     .hero-title {
-        font-size: 2rem;
+        font-size: var(--font-size-3xl);
         margin-bottom: 0.75rem;
+        line-height: var(--line-height-tight);
+        letter-spacing: -0.025em;
     }
 
     .hero-description {
-        font-size: 1rem;
+        font-size: var(--font-size-lg);
         margin-bottom: 1.5rem;
-        line-height: 1.5;
+        line-height: var(--line-height-relaxed);
+        color: var(--text-secondary);
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .section-title {
-        font-size: 1.8rem;
+        font-size: var(--font-size-2xl);
         margin-bottom: 0.75rem;
+        line-height: var(--line-height-tight);
     }
 
     .section-description {
-        font-size: 1rem;
+        font-size: var(--font-size-base);
         margin-bottom: 2rem;
+        line-height: var(--line-height-relaxed);
+        color: var(--text-secondary);
     }
 
     .projects-grid {
@@ -824,15 +859,20 @@ section {
 
     .project-card {
         padding: 1.25rem;
+        border-radius: 12px;
     }
 
     .project-title {
-        font-size: 1.2rem;
+        font-size: var(--font-size-xl);
+        line-height: var(--line-height-tight);
+        margin-bottom: 0.75rem;
     }
 
     .project-description {
-        font-size: 0.9rem;
-        line-height: 1.5;
+        font-size: var(--font-size-base);
+        line-height: var(--line-height-relaxed);
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
     }
 
     .project-tech {
@@ -841,8 +881,10 @@ section {
     }
 
     .tech-tag {
-        font-size: 0.75rem;
+        font-size: var(--font-size-sm);
         padding: 0.25rem 0.6rem;
+        border-radius: 6px;
+        font-weight: 500;
     }
 
     .team-stats {
@@ -852,10 +894,18 @@ section {
 
     .stat-card {
         padding: 1.25rem;
+        border-radius: 12px;
     }
 
     .stat-number {
-        font-size: 2rem;
+        font-size: var(--font-size-3xl);
+        line-height: var(--line-height-tight);
+    }
+
+    .stat-label {
+        font-size: var(--font-size-base);
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
     }
 
     .hero-buttons {
@@ -867,13 +917,17 @@ section {
         width: 100%;
         max-width: 250px;
         justify-content: center;
-        padding: 0.875rem 1.25rem;
-        font-size: 0.95rem;
+        padding: 1rem 1.25rem;
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        border-radius: 10px;
+        min-height: 44px;
     }
 
     .floating-card {
         padding: 0.75rem;
         margin: 0.25rem;
+        border-radius: 8px;
     }
 
     .floating-card i {
@@ -882,7 +936,8 @@ section {
     }
 
     .floating-card h3 {
-        font-size: 0.8rem;
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-tight);
     }
 
     .contact-links {
@@ -890,48 +945,61 @@ section {
     }
 
     .contact-link {
-        padding: 0.75rem;
+        padding: 1rem;
         gap: 0.75rem;
+        border-radius: 10px;
+        min-height: 60px;
     }
 
     .contact-link h4 {
-        font-size: 0.95rem;
+        font-size: var(--font-size-base);
+        line-height: var(--line-height-tight);
     }
 
     .contact-link p {
-        font-size: 0.8rem;
+        font-size: var(--font-size-sm);
+        color: var(--text-secondary);
+        line-height: var(--line-height-normal);
     }
 
     .form-group input,
     .form-group select,
     .form-group textarea {
-        padding: 0.875rem;
-        font-size: 1rem;
+        padding: 1rem;
+        font-size: var(--font-size-base);
+        border-radius: 8px;
+        line-height: var(--line-height-normal);
     }
 
     .footer-section h3,
     .footer-section h4 {
-        font-size: 1.1rem;
+        font-size: var(--font-size-lg);
+        line-height: var(--line-height-tight);
     }
 
     .footer-section p,
     .footer-section ul li a {
-        font-size: 0.9rem;
+        font-size: var(--font-size-base);
+        line-height: var(--line-height-normal);
+        color: var(--text-secondary);
     }
 
     /* Touch-friendly improvements */
     .nav-link {
         padding: 0.75rem 0;
-        font-size: 1.1rem;
+        font-size: var(--font-size-lg);
+        line-height: var(--line-height-normal);
     }
 
     .project-link {
         padding: 0.75rem;
-        font-size: 0.9rem;
+        font-size: var(--font-size-base);
         min-height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 8px;
+        font-weight: 500;
     }
 
     /* Improved spacing for mobile */
@@ -941,6 +1009,8 @@ section {
 
     .navbar {
         padding: 0.75rem 0;
+        /* PWA Safe Area */
+        padding-top: max(0.75rem, env(safe-area-inset-top));
     }
 
     .nav-container {
@@ -949,8 +1019,10 @@ section {
 
     /* Better mobile menu */
     .nav-menu {
-        top: 65px;
+        top: calc(65px + env(safe-area-inset-top));
         padding: 1.5rem 0;
+        /* PWA Safe Area */
+        padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
     }
 
     .nav-menu li {
@@ -969,6 +1041,13 @@ section {
     .stat-card:hover {
         transform: none;
     }
+
+    /* Better text contrast for mobile */
+    .team-description p,
+    .team-join p {
+        color: var(--text-secondary);
+        line-height: var(--line-height-relaxed);
+    }
 }
 
 /* Animations */
@@ -980,6 +1059,139 @@ section {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* Better focus styles for accessibility and PWA */
+*:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+button:focus,
+.btn:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(255, 123, 0, 0.2);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --text-secondary: #ffffff;
+        --text-muted: #cccccc;
+        --border-color: #555555;
+    }
+    
+    .project-card,
+    .stat-card,
+    .contact-link {
+        border-width: 2px;
+    }
+}
+.install-btn {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.offline {
+    filter: grayscale(0.3);
+}
+
+.offline::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--warning-color) 0px,
+        var(--warning-color) 10px,
+        transparent 10px,
+        transparent 20px
+    );
+    z-index: 9999;
+    animation: offline-indicator 1s linear infinite;
+}
+
+@keyframes offline-indicator {
+    0% { transform: translateX(-20px); }
+    100% { transform: translateX(0px); }
+}
+
+.update-notification {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0%);
+        opacity: 1;
+    }
+}
+
+/* PWA Display Modes */
+@media (display-mode: standalone) {
+    .navbar {
+        padding-top: max(0.75rem, env(safe-area-inset-top));
+    }
+    
+    .hero {
+        padding-top: max(1rem, env(safe-area-inset-top));
+    }
+    
+    /* Hide install button in standalone mode */
+    .install-btn {
+        display: none !important;
+    }
+}
+
+@media (display-mode: fullscreen) {
+    .navbar {
+        padding-top: max(0.75rem, env(safe-area-inset-top));
+    }
+}
+
+/* Dark mode support (system preference) */
+@media (prefers-color-scheme: light) {
+    /* Users who prefer light mode can have adjusted colors if needed */
+    :root {
+        --text-secondary: #666666;
+        --text-muted: #999999;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .floating-card {
+        animation: none !important;
+    }
+    
+    .install-btn {
+        animation: none !important;
     }
 }
 
