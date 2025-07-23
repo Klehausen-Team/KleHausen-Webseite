@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Creator Gruppe - KleHausen</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .project-hero {
+            min-height: 60vh;
+            background: var(--gradient-secondary);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+        
+        .project-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 123, 0, 0.15) 0%, transparent 50%);
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .back-button:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(-2px);
+        }
+        
+        .project-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .content-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .content-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .content-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .content-icon.youtube {
+            background: linear-gradient(135deg, #FF0000, #FF4444);
+        }
+        
+        .content-icon.twitch {
+            background: linear-gradient(135deg, #9146FF, #B177FF);
+        }
+        
+        .content-icon.gaming {
+            background: linear-gradient(135deg, #00D4AA, #00F2CC);
+        }
+        
+        .content-icon.dev {
+            background: linear-gradient(135deg, #FF7B00, #FF9533);
+        }
+        
+        .content-icon i {
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .stat-item {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .stat-item:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.02);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .team-showcase {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .team-member {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .team-member:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+        }
+        
+        .member-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        
+        .member-avatar i {
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .member-role {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .platforms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .platform-card {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+        }
+        
+        .platform-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .platform-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .platform-icon.youtube { background: #FF0000; }
+        .platform-icon.twitch { background: #9146FF; }
+        .platform-icon.discord { background: #5865F2; }
+        .platform-icon.social { background: var(--primary-color); }
+        
+        .platform-icon i {
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .content-schedule {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+        
+        .schedule-item:hover {
+            background: var(--background-color);
+        }
+        
+        .schedule-day {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .join-notice {
+            background: linear-gradient(135deg, rgba(255, 123, 0, 0.1), rgba(255, 170, 0, 0.1));
+            border: 1px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .project-content {
+                padding: 0 15px;
+            }
+
+            .back-button {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 1rem;
+                width: 100%;
+                max-width: 200px;
+                justify-content: center;
+            }
+            
+            .content-types {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .platforms {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .content-card {
+                padding: 1.5rem;
+            }
+
+            .stat-item {
+                padding: 1.25rem;
+            }
+
+            .platform-card {
+                padding: 1.5rem;
+            }
+
+            .team-member {
+                padding: 1.25rem;
+            }
+
+            .schedule-item {
+                padding: 0.75rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .schedule-day {
+                min-width: auto;
+                padding: 0.4rem 0.75rem;
+            }
+
+            .project-hero {
+                min-height: 50vh;
+                padding: 2rem 0;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+                line-height: 1.5;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .project-content {
+                padding: 0 10px;
+            }
+
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-description {
+                font-size: 0.95rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-card {
+                padding: 1.25rem;
+            }
+
+            .content-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .content-icon i {
+                font-size: 1.25rem;
+            }
+
+            .stat-item {
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.75rem;
+            }
+
+            .platform-card {
+                padding: 1.25rem;
+            }
+
+            .platform-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .platform-icon i {
+                font-size: 1rem;
+            }
+
+            .team-member {
+                padding: 1rem;
+            }
+
+            .member-avatar {
+                width: 50px;
+                height: 50px;
+            }
+
+            .member-avatar i {
+                font-size: 1.25rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .join-notice {
+                padding: 1.5rem;
+            }
+
+            .join-notice i {
+                font-size: 1.5rem;
+            }
+
+            .content-schedule {
+                padding: 1.5rem;
+            }
+
+            .schedule-item {
+                padding: 0.625rem;
+            }
+
+            .schedule-day {
+                font-size: 0.9rem;
+                padding: 0.35rem 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><a href="../index.html" style="color: var(--primary-color); text-decoration: none;">KleHausen</a></h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#projekte" class="nav-link">Projekte</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#team" class="nav-link">Team</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#kontakt" class="nav-link">Kontakt</a>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <a href="../index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Zurück zur Übersicht
+    </a>
+
+    <!-- Project Hero -->
+    <section class="project-hero">
+        <div class="project-content">
+            <div class="hero-content">
+                <h1 class="hero-title">Content Creator <span class="highlight">Gruppe</span></h1>
+                <p class="hero-description">
+                    Unsere kleine aber feine Content Creator Gruppe von 4-8 Personen produziert gemeinsam 
+                    verschiedensten Content auf diversen Plattformen. Von Gaming-Videos bis hin zu 
+                    Entwicklungs-Streams - wir decken alles ab!
+                </p>
+                <div class="project-status active" style="margin-top: 1rem;">
+                    <i class="fas fa-circle"></i> Aktiv
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Details -->
+    <section style="padding: 3rem 0;">
+        <div class="project-content">
+            <h2 class="section-title">Content <span class="highlight">Bereiche</span></h2>
+            <div class="content-types">
+                <div class="content-card">
+                    <div class="content-icon youtube">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <h3>Gaming Content</h3>
+                    <p>Let's Plays, Reviews und Gaming-Tutorials zu verschiedenen Spielen. Von Indie-Games bis hin zu AAA-Titeln.</p>
+                    <ul style="color: var(--text-secondary); margin-top: 1rem; padding-left: 1rem;">
+                        <li>Minecraft Builds & Tutorials</li>
+                        <li>Indie Game Reviews</li>
+                        <li>Gaming Challenges</li>
+                        <li>Multiplayer Sessions</li>
+                    </ul>
+                </div>
+                
+                <div class="content-card">
+                    <div class="content-icon dev">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Development Content</h3>
+                    <p>Programmier-Tutorials, Code-Reviews und Live-Coding Sessions für angehende Entwickler.</p>
+                    <ul style="color: var(--text-secondary); margin-top: 1rem; padding-left: 1rem;">
+                        <li>Web Development Tutorials</li>
+                        <li>Live Coding Streams</li>
+                        <li>Code Review Sessions</li>
+                        <li>Projekt-Entwicklung</li>
+                    </ul>
+                </div>
+                
+                <div class="content-card">
+                    <div class="content-icon twitch">
+                        <i class="fab fa-twitch"></i>
+                    </div>
+                    <h3>Live Streams</h3>
+                    <p>Regelmäßige Live-Streams auf Twitch mit Gaming, Development und Community-Interaktion.</p>
+                    <ul style="color: var(--text-secondary); margin-top: 1rem; padding-left: 1rem;">
+                        <li>Gaming Streams</li>
+                        <li>Development Streams</li>
+                        <li>Just Chatting</li>
+                        <li>Community Events</li>
+                    </ul>
+                </div>
+                
+                <div class="content-card">
+                    <div class="content-icon gaming">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community Content</h3>
+                    <p>Kollaborationen, Community-Events und Social Media Content für unsere wachsende Community.</p>
+                    <ul style="color: var(--text-secondary); margin-top: 1rem; padding-left: 1rem;">
+                        <li>Discord Events</li>
+                        <li>Community Challenges</li>
+                        <li>Kollaborationen</li>
+                        <li>Social Media Posts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2 class="section-title">Team <span class="highlight">Statistiken</span></h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">4-8</div>
+                    <div class="stat-label">Content Creators</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5+</div>
+                    <div class="stat-label">Plattformen</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">Videos/Monat</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Streams/Woche</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Kreativität</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Leidenschaft</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Unser <span class="highlight">Team</span></h2>
+            <div class="team-showcase">
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; text-align: center;">
+                    Jeder in unserem Team bringt einzigartige Fähigkeiten und Perspektiven mit ein. 
+                    Zusammen schaffen wir vielfältigen und interessanten Content.
+                </p>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h4>Die Entwickler</h4>
+                        <div class="member-role">Frontend & Backend</div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                            Spezialisiert auf Web-Development und Programming Content
+                        </p>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h4>Die Gamer</h4>
+                        <div class="member-role">Gaming Content</div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                            Experten in verschiedenen Game-Genres und Streaming
+                        </p>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h4>Die Creators</h4>
+                        <div class="member-role">Content Production</div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                            Video-Editing, Design und Content-Strategie
+                        </p>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>Community Manager</h4>
+                        <div class="member-role">Community Building</div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                            Discord-Management und Community-Events
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Unsere <span class="highlight">Plattformen</span></h2>
+            <div class="platforms">
+                <div class="platform-card">
+                    <div class="platform-header">
+                        <div class="platform-icon youtube">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <h3>YouTube</h3>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Hauptkanal für unsere längeren Videos und Tutorials.
+                    </p>
+                    <ul style="color: var(--text-secondary); padding-left: 1rem; font-size: 0.9rem;">
+                        <li>Gaming Let's Plays</li>
+                        <li>Development Tutorials</li>
+                        <li>Projekt-Updates</li>
+                        <li>Community Highlights</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem; width: 100%; justify-content: center;">
+                        <i class="fab fa-youtube"></i> Kanal besuchen
+                    </a>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-header">
+                        <div class="platform-icon twitch">
+                            <i class="fab fa-twitch"></i>
+                        </div>
+                        <h3>Twitch</h3>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Live-Streams mit direkter Community-Interaktion.
+                    </p>
+                    <ul style="color: var(--text-secondary); padding-left: 1rem; font-size: 0.9rem;">
+                        <li>Gaming Sessions</li>
+                        <li>Live Coding</li>
+                        <li>Q&A Sessions</li>
+                        <li>Community Games</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem; width: 100%; justify-content: center;">
+                        <i class="fab fa-twitch"></i> Stream schauen
+                    </a>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-header">
+                        <div class="platform-icon discord">
+                            <i class="fab fa-discord"></i>
+                        </div>
+                        <h3>Discord</h3>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Unser Community-Hub für direkten Austausch.
+                    </p>
+                    <ul style="color: var(--text-secondary); padding-left: 1rem; font-size: 0.9rem;">
+                        <li>Community Chat</li>
+                        <li>Voice Channels</li>
+                        <li>Events & Ankündigungen</li>
+                        <li>Feedback & Ideen</li>
+                    </ul>
+                    <a href="https://dsc.gg/kle" class="btn btn-primary" target="_blank" style="margin-top: 1rem; width: 100%; justify-content: center;">
+                        <i class="fab fa-discord"></i> Discord beitreten
+                    </a>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-header">
+                        <div class="platform-icon social">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <h3>Social Media</h3>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Updates und Behind-the-Scenes Content.
+                    </p>
+                    <ul style="color: var(--text-secondary); padding-left: 1rem; font-size: 0.9rem;">
+                        <li>Twitter Updates</li>
+                        <li>Instagram Stories</li>
+                        <li>TikTok Highlights</li>
+                        <li>Community Posts</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem; width: 100%; justify-content: center;">
+                        <i class="fas fa-external-link-alt"></i> Folgen
+                    </a>
+                </div>
+            </div>
+
+            <h2 class="section-title">Content <span class="highlight">Schedule</span></h2>
+            <div class="content-schedule">
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; text-align: center;">
+                    Unser wöchentlicher Content-Plan (kann variieren je nach Verfügbarkeit des Teams)
+                </p>
+                <div class="schedule-item">
+                    <div class="schedule-day">Mo</div>
+                    <div>
+                        <h4>Montag Motivation</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                            Wochenstart mit motivierenden Gaming-Sessions oder Development-Updates
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="schedule-item">
+                    <div class="schedule-day">Mi</div>
+                    <div>
+                        <h4>Mitte der Woche Stream</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                            Live-Stream auf Twitch - Gaming oder Live Coding
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="schedule-item">
+                    <div class="schedule-day">Fr</div>
+                    <div>
+                        <h4>Freitag Fun</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                            Community-Events, Multiplayer-Sessions oder neue Video-Releases
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="schedule-item">
+                    <div class="schedule-day">So</div>
+                    <div>
+                        <h4>Sonntag Summary</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                            Wochenrückblick und Ausblick auf kommende Projekte
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="join-notice">
+                <i class="fas fa-star" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Teil unserer Community werden</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Werde Teil unserer wachsenden Community! Folge uns auf unseren Plattformen, 
+                    tritt unserem Discord bei und verpasse keine Updates zu unseren Projekten und Content.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="https://dsc.gg/kle" class="btn btn-primary" target="_blank">
+                        <i class="fab fa-discord"></i> Discord Community
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        <i class="fab fa-youtube"></i> YouTube abonnieren
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        <i class="fab fa-twitch"></i> Twitch folgen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="../script.js"></script>
+</body>
+</html>

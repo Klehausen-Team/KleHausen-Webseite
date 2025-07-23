@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KleHausen - Discord Community & Projekte</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>KleHausen</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#projekte" class="nav-link">Projekte</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#team" class="nav-link">Team</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#kontakt" class="nav-link">Kontakt</a>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Willkommen bei <span class="highlight">KleHausen</span></h1>
+                <p class="hero-description">
+                    Eine kreative Discord Community von 4-8 Content Creators, die gemeinsam innovative Projekte entwickeln und Content produzieren.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projekte" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i> Projekte entdecken
+                    </a>
+                    <a href="https://dsc.gg/kle" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-discord"></i> Discord beitreten
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-card">
+                    <i class="fas fa-code"></i>
+                    <h3>Web Development</h3>
+                </div>
+                <div class="floating-card">
+                    <i class="fas fa-gamepad"></i>
+                    <h3>Gaming</h3>
+                </div>
+                <div class="floating-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Community</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projekte Section -->
+    <section id="projekte" class="projects">
+        <div class="container">
+            <h2 class="section-title">Unsere <span class="highlight">Projekte</span></h2>
+            <p class="section-description">
+                Entdecke die verschiedenen Projekte, an denen unser Team arbeitet
+            </p>
+            
+            <div class="projects-grid">
+                <!-- Web Desktop Projekt -->
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3 class="project-title">Web-basierter Desktop</h3>
+                    <p class="project-description">
+                        Ein innovatives webbasiertes Desktop-System, das eine vollständige Desktop-Erfahrung im Browser bietet.
+                    </p>
+                    <div class="project-status active">
+                        <i class="fas fa-circle"></i> Aktiv in Entwicklung
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-tag">HTML5</span>
+                        <span class="tech-tag">CSS3</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">Node.js</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="projekte/web-desktop.html" class="project-link">
+                            <i class="fas fa-info-circle"></i> Details
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fas fa-external-link-alt"></i> Demo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Minecraft Server Projekt -->
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3 class="project-title">Minecraft Server</h3>
+                    <p class="project-description">
+                        Unser eigener Minecraft Server mit custom Features und Plugins für die Community.
+                    </p>
+                    <div class="project-status paused">
+                        <i class="fas fa-pause-circle"></i> Entwicklung pausiert
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-tag">Java</span>
+                        <span class="tech-tag">Spigot</span>
+                        <span class="tech-tag">MySQL</span>
+                        <span class="tech-tag">Docker</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="projekte/minecraft-server.html" class="project-link">
+                            <i class="fas fa-info-circle"></i> Details
+                        </a>
+                        <a href="#" class="project-link disabled">
+                            <i class="fas fa-server"></i> Server Info
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fab fa-github"></i> Plugins
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Social Media Gruppe -->
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <h3 class="project-title">Content Creator Gruppe</h3>
+                    <p class="project-description">
+                        Unsere kleine aber feine Content Creator Gruppe produziert gemeinsam verschiedensten Content.
+                    </p>
+                    <div class="project-status active">
+                        <i class="fas fa-circle"></i> Aktiv
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-tag">YouTube</span>
+                        <span class="tech-tag">Twitch</span>
+                        <span class="tech-tag">Discord</span>
+                        <span class="tech-tag">Social Media</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="projekte/content-creator.html" class="project-link">
+                            <i class="fas fa-info-circle"></i> Details
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fab fa-youtube"></i> YouTube
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fab fa-twitch"></i> Twitch
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Zukünftige Projekte -->
+                <div class="project-card upcoming">
+                    <div class="project-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="project-title">Kommende Projekte</h3>
+                    <p class="project-description">
+                        Wir arbeiten ständig an neuen, aufregenden Projekten. Bleib gespannt auf Updates!
+                    </p>
+                    <div class="project-status upcoming">
+                        <i class="fas fa-clock"></i> In Planung
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-tag">???</span>
+                        <span class="tech-tag">???</span>
+                        <span class="tech-tag">???</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#kontakt" class="project-link">
+                            <i class="fas fa-envelope"></i> Ideen einreichen
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="team">
+        <div class="container">
+            <h2 class="section-title">Unser <span class="highlight">Team</span></h2>
+            <p class="section-description">
+                Eine kleine aber starke Gruppe von Content Creators
+            </p>
+            
+            <div class="team-stats">
+                <div class="stat-card">
+                    <div class="stat-number">4-8</div>
+                    <div class="stat-label">Team Mitglieder</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3+</div>
+                    <div class="stat-label">Aktive Projekte</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Kreativität</div>
+                </div>
+            </div>
+
+            <div class="team-info">
+                <div class="team-description">
+                    <h3>Gemeinsam stark</h3>
+                    <p>
+                        Unser Team besteht aus leidenschaftlichen Content Creators, Entwicklern und Gamern, 
+                        die zusammen innovative Projekte realisieren. Jeder bringt seine einzigartigen 
+                        Fähigkeiten und Perspektiven ein, um gemeinsam großartige Inhalte zu schaffen.
+                    </p>
+                    <p>
+                        Von Web-Entwicklung über Gaming-Content bis hin zu kreativen Multimedia-Projekten - 
+                        wir decken ein breites Spektrum ab und sind immer offen für neue Ideen und Kollaborationen.
+                    </p>
+                </div>
+                <div class="team-join">
+                    <h3>Teil des Teams werden?</h3>
+                    <p>
+                        Interessiert daran, bei unseren Projekten mitzumachen? 
+                        Tritt unserem Discord bei und lerne uns kennen!
+                    </p>
+                    <a href="https://dsc.gg/kle" class="btn btn-primary" target="_blank">
+                        <i class="fab fa-discord"></i> Discord beitreten
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontakt Section -->
+    <section id="kontakt" class="contact">
+        <div class="container">
+            <h2 class="section-title">Kontakt & <span class="highlight">Community</span></h2>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Tritt unserer Community bei</h3>
+                    <p>
+                        Folge uns auf verschiedenen Plattformen und bleib über unsere neuesten Projekte 
+                        und Updates informiert.
+                    </p>
+                    
+                    <div class="contact-links">
+                        <a href="https://dsc.gg/kle" class="contact-link discord" target="_blank">
+                            <i class="fab fa-discord"></i>
+                            <div>
+                                <h4>Discord Server</h4>
+                                <p>Hauptanlaufstelle unserer Community</p>
+                            </div>
+                        </a>
+                        
+                        <a href="https://github.com/your-github" class="contact-link github" target="_blank">
+                            <i class="fab fa-github"></i>
+                            <div>
+                                <h4>GitHub</h4>
+                                <p>Unsere Open Source Projekte</p>
+                            </div>
+                        </a>
+                        
+                        <a href="https://youtube.com/your-channel" class="contact-link youtube" target="_blank">
+                            <i class="fab fa-youtube"></i>
+                            <div>
+                                <h4>YouTube</h4>
+                                <p>Video Content & Tutorials</p>
+                            </div>
+                        </a>
+                        
+                        <a href="https://twitch.tv/your-channel" class="contact-link twitch" target="_blank">
+                            <i class="fab fa-twitch"></i>
+                            <div>
+                                <h4>Twitch</h4>
+                                <p>Live Streams & Gaming</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h3>Nachricht senden</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="Dein Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="Deine E-Mail" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="subject" name="subject" required>
+                                <option value="">Betreff wählen</option>
+                                <option value="collaboration">Kollaboration</option>
+                                <option value="project-idea">Projekt Idee</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Sonstiges</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" placeholder="Deine Nachricht" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Nachricht senden
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>KleHausen</h3>
+                    <p>Eine kreative Discord Community für Content Creator und Entwickler.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#projekte">Projekte</a></li>
+                        <li><a href="#team">Team</a></li>
+                        <li><a href="#kontakt">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://dsc.gg/kle" target="_blank">Discord</a></li>
+                        <li><a href="https://github.com/your-github" target="_blank">GitHub</a></li>
+                        <li><a href="https://youtube.com/your-channel" target="_blank">YouTube</a></li>
+                        <li><a href="https://twitch.tv/your-channel" target="_blank">Twitch</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 KleHausen. Made with <i class="fas fa-heart"></i> by the KleHausen Team.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

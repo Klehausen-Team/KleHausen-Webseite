@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Server - KleHausen</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .project-hero {
+            min-height: 60vh;
+            background: var(--gradient-secondary);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+        
+        .project-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(255, 123, 0, 0.15) 0%, transparent 50%);
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .back-button:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(-2px);
+        }
+        
+        .project-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .server-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .info-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .info-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+        }
+        
+        .info-card.disabled {
+            opacity: 0.6;
+            border-style: dashed;
+        }
+        
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        
+        .info-icon.disabled {
+            background: var(--text-muted);
+        }
+        
+        .info-icon i {
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+        }
+        
+        .feature-card.planned {
+            border-style: dashed;
+            opacity: 0.8;
+        }
+        
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feature-icon.planned {
+            background: var(--text-muted);
+        }
+        
+        .feature-icon i {
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: auto;
+        }
+        
+        .status-badge.completed {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+        
+        .status-badge.planned {
+            background: rgba(102, 102, 102, 0.2);
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+        }
+        
+        .plugin-list {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .plugin-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        .plugin-item:last-child {
+            border-bottom: none;
+        }
+        
+        .plugin-item:hover {
+            background: var(--background-color);
+        }
+        
+        .plugin-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .plugin-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .plugin-icon i {
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .resume-notice {
+            background: linear-gradient(135deg, rgba(255, 123, 0, 0.1), rgba(255, 170, 0, 0.1));
+            border: 1px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .project-content {
+                padding: 0 15px;
+            }
+
+            .back-button {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 1rem;
+                width: 100%;
+                max-width: 200px;
+                justify-content: center;
+            }
+            
+            .server-info {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .info-card {
+                padding: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .plugin-item {
+                padding: 0.75rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .plugin-info {
+                gap: 0.75rem;
+            }
+
+            .project-hero {
+                min-height: 50vh;
+                padding: 2rem 0;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+                line-height: 1.5;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .project-content {
+                padding: 0 10px;
+            }
+
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-description {
+                font-size: 0.95rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .info-card {
+                padding: 1.25rem;
+            }
+
+            .info-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .info-icon i {
+                font-size: 1.25rem;
+            }
+
+            .feature-card {
+                padding: 1.25rem;
+            }
+
+            .feature-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .feature-icon i {
+                font-size: 0.9rem;
+            }
+
+            .plugin-item {
+                padding: 0.625rem;
+            }
+
+            .plugin-icon {
+                width: 25px;
+                height: 25px;
+            }
+
+            .plugin-icon i {
+                font-size: 0.8rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .resume-notice {
+                padding: 1.5rem;
+            }
+
+            .resume-notice i {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><a href="../index.html" style="color: var(--primary-color); text-decoration: none;">KleHausen</a></h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#projekte" class="nav-link">Projekte</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#team" class="nav-link">Team</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#kontakt" class="nav-link">Kontakt</a>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <a href="../index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Zurück zur Übersicht
+    </a>
+
+    <!-- Project Hero -->
+    <section class="project-hero">
+        <div class="project-content">
+            <div class="hero-content">
+                <h1 class="hero-title">Minecraft <span class="highlight">Server</span></h1>
+                <p class="hero-description">
+                    Unser eigener Minecraft Server mit custom Features und Plugins für die KleHausen Community. 
+                    Ein Ort zum gemeinsamen Bauen, Erkunden und Spaß haben.
+                </p>
+                <div class="project-status paused" style="margin-top: 1rem;">
+                    <i class="fas fa-pause-circle"></i> Entwicklung pausiert
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Details -->
+    <section style="padding: 3rem 0;">
+        <div class="project-content">
+            <div class="resume-notice">
+                <i class="fas fa-info-circle" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Projekt Status</h3>
+                <p style="color: var(--text-secondary);">
+                    Die Entwicklung unseres Minecraft Servers ist aktuell pausiert, aber nicht aufgegeben! 
+                    Wir planen, das Projekt in Zukunft wieder aufzunehmen und mit neuen Features zu erweitern.
+                </p>
+            </div>
+
+            <h2 class="section-title">Server <span class="highlight">Übersicht</span></h2>
+            <div class="server-info">
+                <div class="info-card disabled">
+                    <div class="info-icon disabled">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>Server Status</h3>
+                    <p style="color: var(--warning-color);">Offline</p>
+                    <small style="color: var(--text-muted);">Wartung</small>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Version</h3>
+                    <p>Spigot 1.20.1</p>
+                    <small style="color: var(--text-secondary);">Java Edition</small>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community</h3>
+                    <p>KleHausen Team</p>
+                    <small style="color: var(--text-secondary);">4-8 Spieler</small>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>Spielmodus</h3>
+                    <p>Survival & Creative</p>
+                    <small style="color: var(--text-secondary);">Mixed Mode</small>
+                </div>
+            </div>
+
+            <h2 class="section-title">Features & <span class="highlight">Plugins</span></h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h3>Claims System</h3>
+                        <span class="status-badge completed">
+                            <i class="fas fa-check"></i> Fertig
+                        </span>
+                    </div>
+                    <p>Spieler können ihre Gebiete schützen und verwalten. Vollständig konfigurierbar mit verschiedenen Berechtigungsstufen.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <h3>Wirtschaftssystem</h3>
+                        <span class="status-badge completed">
+                            <i class="fas fa-check"></i> Fertig
+                        </span>
+                    </div>
+                    <p>Vollständiges Wirtschaftssystem mit Shops, Geld und Handel zwischen Spielern.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-map"></i>
+                        </div>
+                        <h3>Warps & Teleports</h3>
+                        <span class="status-badge completed">
+                            <i class="fas fa-check"></i> Fertig
+                        </span>
+                    </div>
+                    <p>Einfaches Teleportieren zu wichtigen Orten und eigenen Warps.</p>
+                </div>
+                
+                <div class="feature-card planned">
+                    <div class="feature-header">
+                        <div class="feature-icon planned">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Quest System</h3>
+                        <span class="status-badge planned">
+                            <i class="fas fa-clock"></i> Geplant
+                        </span>
+                    </div>
+                    <p>Custom Quests und Achievements für mehr Spielspaß und Progression.</p>
+                </div>
+                
+                <div class="feature-card planned">
+                    <div class="feature-header">
+                        <div class="feature-icon planned">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <h3>Events</h3>
+                        <span class="status-badge planned">
+                            <i class="fas fa-clock"></i> Geplant
+                        </span>
+                    </div>
+                    <p>Regelmäßige Community-Events und Minispiele für die Spieler.</p>
+                </div>
+                
+                <div class="feature-card planned">
+                    <div class="feature-header">
+                        <div class="feature-icon planned">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3>Custom Items</h3>
+                        <span class="status-badge planned">
+                            <i class="fas fa-clock"></i> Geplant
+                        </span>
+                    </div>
+                    <p>Einzigartige Items und Tools, die nur auf unserem Server verfügbar sind.</p>
+                </div>
+            </div>
+
+            <h2 class="section-title">Installierte <span class="highlight">Plugins</span></h2>
+            <div class="plugin-list">
+                <div class="plugin-item">
+                    <div class="plugin-info">
+                        <div class="plugin-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <h4>GriefPrevention</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Schutz vor Griefing und Land-Claims</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--success-color);">Aktiv</span>
+                </div>
+                
+                <div class="plugin-item">
+                    <div class="plugin-info">
+                        <div class="plugin-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div>
+                            <h4>Vault + EssentialsX</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Wirtschaftssystem und Grundfunktionen</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--success-color);">Aktiv</span>
+                </div>
+                
+                <div class="plugin-item">
+                    <div class="plugin-info">
+                        <div class="plugin-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div>
+                            <h4>ChestShop</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Spieler-Shops mit Truhen</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--success-color);">Aktiv</span>
+                </div>
+                
+                <div class="plugin-item">
+                    <div class="plugin-info">
+                        <div class="plugin-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div>
+                            <h4>DiscordSRV</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Discord-Integration für Chat</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--warning-color);">Konfiguration</span>
+                </div>
+                
+                <div class="plugin-item">
+                    <div class="plugin-info">
+                        <div class="plugin-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div>
+                            <h4>MySQL Backend</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Datenbankanbindung für Persistenz</p>
+                        </div>
+                    </div>
+                    <span style="color: var(--success-color);">Aktiv</span>
+                </div>
+            </div>
+
+            <h2 class="section-title">Technische <span class="highlight">Details</span></h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+                <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; text-align: center;">
+                    <i class="fab fa-java" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                    <h4>Java 17</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">LTS Version</p>
+                </div>
+                
+                <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; text-align: center;">
+                    <i class="fas fa-server" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                    <h4>Spigot</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">1.20.1</p>
+                </div>
+                
+                <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; text-align: center;">
+                    <i class="fas fa-database" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                    <h4>MySQL</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">8.0</p>
+                </div>
+                
+                <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; text-align: center;">
+                    <i class="fab fa-docker" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                    <h4>Docker</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Containerisiert</p>
+                </div>
+            </div>
+
+            <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 2rem; margin-top: 3rem; text-align: center;">
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                    <i class="fas fa-bell"></i> Benachrichtigung erhalten
+                </h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Möchtest du benachrichtigt werden, wenn der Server wieder online geht? 
+                    Tritt unserem Discord bei und aktiviere die Benachrichtigungen!
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="https://dsc.gg/kle" class="btn btn-primary" target="_blank">
+                        <i class="fab fa-discord"></i> Discord beitreten
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        <i class="fab fa-github"></i> Plugin Source Code
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="../script.js"></script>
+</body>
+</html>
