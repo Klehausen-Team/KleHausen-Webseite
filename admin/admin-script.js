@@ -1,4 +1,4 @@
-// Admin Panel JavaScript - Vollständig funktionsfähig
+// Admin Panel JavaScript - Vollständig funktionsfähig mit Logging
 class AdminPanel {
     constructor() {
         this.currentUser = null;
@@ -9,91 +9,147 @@ class AdminPanel {
             { id: 2, username: 'creator', password: 'Creator123!', role: 'editor', name: 'Content Creator' }
         ];
         
+        logInfo('ADMIN_PANEL', 'AdminPanel Constructor aufgerufen');
         this.init();
     }
     
     init() {
-        this.showSplash();
-        this.bindEvents();
-        this.checkExistingSession();
-        this.loadMessages();
+        logDebug('ADMIN_PANEL', 'AdminPanel wird initialisiert');
+        
+        try {
+            this.showSplash();
+            this.bindEvents();
+            this.checkExistingSession();
+            this.loadMessages();
+            
+            logSuccess('ADMIN_PANEL', 'AdminPanel erfolgreich initialisiert');
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler bei AdminPanel Initialisierung', error);
+        }
     }
     
     showSplash() {
+        logDebug('ADMIN_PANEL', 'Splash Screen wird angezeigt');
+        
         const splash = document.getElementById('adminSplash');
+        if (!splash) {
+            logError('ADMIN_PANEL', 'Splash Screen Element nicht gefunden');
+            return;
+        }
+        
         setTimeout(() => {
             splash.classList.add('fade-out');
+            logDebug('ADMIN_PANEL', 'Splash Screen fade-out gestartet');
+            
             setTimeout(() => {
                 splash.style.display = 'none';
+                logInfo('ADMIN_PANEL', 'Splash Screen ausgeblendet');
             }, 500);
         }, 2000);
     }
     
     bindEvents() {
-        // Login Form
-        const loginForm = document.getElementById('loginForm');
-        if (loginForm) {
-            loginForm.addEventListener('submit', (e) => this.handleLogin(e));
-        }
+        logDebug('ADMIN_PANEL', 'Event Listener werden gebunden');
         
-        // Password Toggle
-        const togglePassword = document.getElementById('togglePassword');
-        if (togglePassword) {
-            togglePassword.addEventListener('click', () => this.togglePasswordVisibility());
-        }
-        
-        // User Dropdown
-        const userDropdown = document.getElementById('userDropdown');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        
-        if (userDropdown && dropdownMenu) {
-            userDropdown.addEventListener('click', () => {
-                dropdownMenu.classList.toggle('show');
-            });
+        try {
+            // Login Form
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+                logDebug('ADMIN_PANEL', 'Login Form Event Listener gebunden');
+            } else {
+                logWarn('ADMIN_PANEL', 'Login Form nicht gefunden');
+            }
             
-            // Close dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!userDropdown.contains(e.target)) {
-                    dropdownMenu.classList.remove('show');
-                }
+            // Password Toggle
+            const togglePassword = document.getElementById('togglePassword');
+            if (togglePassword) {
+                togglePassword.addEventListener('click', () => this.togglePasswordVisibility());
+                logDebug('ADMIN_PANEL', 'Password Toggle Event Listener gebunden');
+            } else {
+                logWarn('ADMIN_PANEL', 'Password Toggle nicht gefunden');
+            }
+            
+            // User Dropdown
+            const userDropdown = document.getElementById('userDropdown');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            if (userDropdown && dropdownMenu) {
+                userDropdown.addEventListener('click', () => {
+                    dropdownMenu.classList.toggle('show');
+                    logDebug('ADMIN_PANEL', 'User Dropdown Toggle ausgeführt');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!userDropdown.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+                logDebug('ADMIN_PANEL', 'User Dropdown Event Listener gebunden');
+            } else {
+                logWarn('ADMIN_PANEL', 'User Dropdown Elemente nicht gefunden');
+            }
+            
+            // Logout
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.logout();
+                });
+                logDebug('ADMIN_PANEL', 'Logout Button Event Listener gebunden');
+            } else {
+                logWarn('ADMIN_PANEL', 'Logout Button nicht gefunden');
+            }
+            
+            // Menu Navigation
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = link.dataset.page;
+                    this.navigateToPage(page);
+                });
             });
+            logDebug('ADMIN_PANEL', `${menuLinks.length} Menu Links Event Listener gebunden`);
+            
+            logSuccess('ADMIN_PANEL', 'Alle Event Listener erfolgreich gebunden');
+            
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Binden der Event Listener', error);
         }
-        
-        // Logout
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.logout();
-            });
-        }
-        
-        // Menu Navigation
-        const menuLinks = document.querySelectorAll('.menu-link');
-        menuLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = link.dataset.page;
-                this.navigateToPage(page);
-            });
-        });
     }
     
     checkExistingSession() {
-        const savedUser = localStorage.getItem('adminUser');
-        if (savedUser) {
-            this.currentUser = JSON.parse(savedUser);
-            this.showDashboard();
+        logDebug('ADMIN_PANEL', 'Prüfe bestehende Session');
+        
+        try {
+            const savedUser = localStorage.getItem('adminUser');
+            if (savedUser) {
+                this.currentUser = JSON.parse(savedUser);
+                logInfo('ADMIN_PANEL', `Session gefunden für Benutzer: ${this.currentUser.username}`);
+                this.showDashboard();
+            } else {
+                logDebug('ADMIN_PANEL', 'Keine bestehende Session gefunden');
+            }
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Prüfen der Session', error);
+            localStorage.removeItem('adminUser');
         }
     }
     
     loadMessages() {
-        const savedMessages = localStorage.getItem('adminMessages');
-        if (savedMessages) {
-            this.messages = JSON.parse(savedMessages);
-        } else {
-            // Demo messages for testing
-            this.messages = [
+        logDebug('ADMIN_PANEL', 'Lade Nachrichten aus LocalStorage');
+        
+        try {
+            const savedMessages = localStorage.getItem('adminMessages');
+            if (savedMessages) {
+                this.messages = JSON.parse(savedMessages);
+                logInfo('ADMIN_PANEL', `${this.messages.length} Nachrichten aus LocalStorage geladen`);
+            } else {
+                // Demo messages for testing
+                this.messages = [
                 {
                     id: 1,
                     name: 'Max Mustermann',
@@ -126,6 +182,7 @@ class AdminPanel {
                 }
             ];
             this.saveMessages();
+            logInfo('ADMIN_PANEL', 'Demo Nachrichten erstellt');
         }
         
         // Listen for new messages from main website
@@ -136,6 +193,7 @@ class AdminPanel {
                     this.messages.push(data.message);
                     this.saveMessages();
                     this.showSuccess('Neue Nachricht erhalten!');
+                    logInfo('ADMIN_PANEL', 'Neue Nachricht über Storage Event erhalten');
                     
                     if (this.currentPage === 'messages') {
                         this.loadPageContent('messages');
@@ -144,6 +202,13 @@ class AdminPanel {
                 }
             }
         });
+        
+        logSuccess('ADMIN_PANEL', 'Nachrichten erfolgreich geladen');
+        
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Laden der Nachrichten', error);
+            this.messages = [];
+        }
     }
     
     handleLogin(e) {
@@ -255,6 +320,7 @@ class AdminPanel {
             case 'pages':
                 contentDiv.innerHTML = this.getPagesHTML();
                 this.bindPageEditEvents();
+                this.loadSavedPageContent('home'); // Lade gespeicherte Inhalte
                 break;
             case 'projects':
                 contentDiv.innerHTML = this.getProjectsHTML();
@@ -268,6 +334,12 @@ class AdminPanel {
                 break;
             case 'analytics':
                 contentDiv.innerHTML = this.getAnalyticsHTML();
+                break;
+            case 'notifications':
+                contentDiv.innerHTML = this.getNotificationsHTML();
+                break;
+            case 'backup':
+                contentDiv.innerHTML = this.getBackupHTML();
                 break;
             default:
                 contentDiv.innerHTML = '<div class="page-content"><h1>Seite nicht gefunden</h1></div>';
@@ -537,44 +609,77 @@ class AdminPanel {
     }
     
     getProjectsHTML() {
+        let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+        if (projects.length === 0) {
+            projects = [
+                {id: 1, name: 'Web-basierter Desktop', status: 'Aktiv in Entwicklung', desc: 'Ein innovatives webbasiertes Desktop-System', icon: 'fas fa-desktop'},
+                {id: 2, name: 'Minecraft Server', status: 'Pausiert', desc: 'Custom Minecraft Server mit Plugins', icon: 'fas fa-cube'}
+            ];
+            localStorage.setItem('adminProjects', JSON.stringify(projects));
+        }
+        const projectHTML = projects.map((p, idx) => `
+            <div class="project-card ${p.status.includes('Aktiv') ? 'active' : 'paused'}">
+                <div class="project-icon"><i class="${p.icon}"></i></div>
+                <h3>${p.name}</h3>
+                <p>${p.desc}</p>
+                <div class="project-status ${p.status.includes('Aktiv') ? 'active' : 'paused'}">
+                    <i class="${p.status.includes('Aktiv') ? 'fas fa-circle' : 'fas fa-pause-circle'}"></i> ${p.status}
+                </div>
+                <div class="project-actions">
+                    <button onclick="adminPanel.editProject(${p.id})">Bearbeiten</button>
+                    <button onclick="adminPanel.deleteProject(${p.id})">Löschen</button>
+                </div>
+            </div>
+        `).join('');
         return `
             <div class="page-content">
                 <div class="page-header">
                     <h1><i class="fas fa-project-diagram"></i> Projekte verwalten</h1>
                     <p>Projekt-Inhalte bearbeiten und verwalten</p>
+                    <button class="btn-add-project" onclick="adminPanel.addProject()"><i class="fas fa-plus"></i> Neues Projekt</button>
                 </div>
-                
-                <div class="projects-overview">
-                    <div class="project-card active">
-                        <div class="project-icon">
-                            <i class="fas fa-desktop"></i>
-                        </div>
-                        <h3>Web-basierter Desktop</h3>
-                        <p>Ein innovatives webbasiertes Desktop-System</p>
-                        <div class="project-status active">
-                            <i class="fas fa-circle"></i> Aktiv in Entwicklung
-                        </div>
-                        <div class="project-actions">
-                            <button onclick="adminPanel.editProject(1)">Bearbeiten</button>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card paused">
-                        <div class="project-icon">
-                            <i class="fas fa-cube"></i>
-                        </div>
-                        <h3>Minecraft Server</h3>
-                        <p>Custom Minecraft Server mit Plugins</p>
-                        <div class="project-status paused">
-                            <i class="fas fa-pause-circle"></i> Pausiert
-                        </div>
-                        <div class="project-actions">
-                            <button onclick="adminPanel.editProject(2)">Bearbeiten</button>
-                        </div>
-                    </div>
-                </div>
+                <div class="projects-overview">${projectHTML}</div>
             </div>
         `;
+    }
+
+    addProject() {
+        const name = prompt('Projektname:');
+        if (!name) return;
+        const desc = prompt('Beschreibung:');
+        const status = prompt('Status (z.B. Aktiv in Entwicklung, Pausiert):', 'Aktiv in Entwicklung');
+        const icon = prompt('FontAwesome Icon-Klasse:', 'fas fa-rocket');
+        let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+        const id = projects.length > 0 ? Math.max(...projects.map(p => p.id)) + 1 : 1;
+        projects.push({id, name, desc, status, icon});
+        localStorage.setItem('adminProjects', JSON.stringify(projects));
+        this.showSuccess('Projekt hinzugefügt!');
+        this.loadPageContent('projects');
+    }
+
+    editProject(id) {
+        let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+        const idx = projects.findIndex(p => p.id === id);
+        if (idx === -1) return;
+        const p = projects[idx];
+        const name = prompt('Projektname:', p.name);
+        const desc = prompt('Beschreibung:', p.desc);
+        const status = prompt('Status:', p.status);
+        const icon = prompt('FontAwesome Icon-Klasse:', p.icon);
+        projects[idx] = {...p, name, desc, status, icon};
+        localStorage.setItem('adminProjects', JSON.stringify(projects));
+        this.showSuccess('Projekt aktualisiert!');
+        this.loadPageContent('projects');
+    }
+
+    deleteProject(id) {
+        let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+        if (confirm('Projekt wirklich löschen?')) {
+            projects = projects.filter(p => p.id !== id);
+            localStorage.setItem('adminProjects', JSON.stringify(projects));
+            this.showSuccess('Projekt gelöscht!');
+            this.loadPageContent('projects');
+        }
     }
     
     getUsersHTML() {
@@ -619,18 +724,68 @@ class AdminPanel {
     }
     
     getMediaHTML() {
+        const media = JSON.parse(localStorage.getItem('adminMedia') || '[]');
+        const mediaHTML = media.length > 0 ? media.map((file, idx) => `
+            <div class="media-item">
+                <div class="media-preview">
+                    ${file.type.startsWith('image') ? `<img src="${file.data}" alt="${file.name}" style="max-width:80px;max-height:80px;">` : `<i class=\"fas fa-file-video\"></i>`}
+                </div>
+                <div class="media-info">
+                    <h4>${file.name}</h4>
+                    <p>${file.size} KB</p>
+                </div>
+                <div class="media-actions">
+                    <button class="btn-delete-media" onclick="adminPanel.deleteMedia(${idx})"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `).join('') : '<div class="no-messages"><i class="fas fa-images"></i><p>Keine Medien hochgeladen</p></div>';
         return `
             <div class="page-content">
                 <div class="page-header">
                     <h1><i class="fas fa-photo-video"></i> Medien verwalten</h1>
                     <p>Bilder, Videos und andere Medien verwalten</p>
+                    <button class="btn-upload-media" onclick="adminPanel.uploadMedia()"><i class="fas fa-upload"></i> Datei hochladen</button>
                 </div>
-                <div class="media-placeholder">
-                    <i class="fas fa-images"></i>
-                    <p>Medien-Management wird geladen...</p>
-                </div>
+                <div class="media-grid">${mediaHTML}</div>
             </div>
         `;
+    }
+
+    uploadMedia() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*,video/*';
+        input.multiple = true;
+        input.onchange = (e) => {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const media = JSON.parse(localStorage.getItem('adminMedia') || '[]');
+                    media.push({
+                        name: file.name,
+                        size: Math.round(file.size/1024),
+                        type: file.type,
+                        data: ev.target.result
+                    });
+                    localStorage.setItem('adminMedia', JSON.stringify(media));
+                    this.showSuccess('Datei hochgeladen!');
+                    this.loadPageContent('media');
+                };
+                reader.readAsDataURL(file);
+            });
+        };
+        input.click();
+    }
+
+    deleteMedia(idx) {
+        const media = JSON.parse(localStorage.getItem('adminMedia') || '[]');
+        if (media[idx] && confirm('Datei wirklich löschen?')) {
+            media.splice(idx, 1);
+            localStorage.setItem('adminMedia', JSON.stringify(media));
+            this.showSuccess('Datei gelöscht!');
+            this.loadPageContent('media');
+        }
     }
     
     getAnalyticsHTML() {
@@ -640,9 +795,14 @@ class AdminPanel {
                     <h1><i class="fas fa-chart-line"></i> Analytics</h1>
                     <p>Website-Statistiken und Besucheranalyse</p>
                 </div>
-                <div class="analytics-placeholder">
-                    <i class="fas fa-chart-bar"></i>
-                    <p>Analytics werden geladen...</p>
+                <div class="analytics-stats">
+                    <div class="analytics-card"><i class="fas fa-users"></i><h3>1.247</h3><p>Besucher</p></div>
+                    <div class="analytics-card"><i class="fas fa-eye"></i><h3>3.891</h3><p>Seitenaufrufe</p></div>
+                    <div class="analytics-card"><i class="fas fa-clock"></i><h3>2:34</h3><p>Ø Besuchsdauer</p></div>
+                    <div class="analytics-card"><i class="fas fa-mobile-alt"></i><h3>68%</h3><p>Mobile Nutzer</p></div>
+                </div>
+                <div class="analytics-charts">
+                    <div class="chart-placeholder"><i class="fas fa-chart-area"></i><p>Chart wird geladen...</p></div>
                 </div>
             </div>
         `;
@@ -714,34 +874,77 @@ class AdminPanel {
         }
     }
     
-    saveMessages() {
-        localStorage.setItem('adminMessages', JSON.stringify(this.messages));
-        this.updateMessageCount();
+    getNotificationsHTML() {
+        return `
+            <div class="page-content">
+                <div class="page-header">
+                    <h1><i class="fas fa-bell"></i> Benachrichtigungen</h1>
+                    <p>System- und Team-Benachrichtigungen</p>
+                </div>
+                <div class="notifications-list">
+                    <div class="notification-item"><i class="fas fa-info-circle"></i> Systemupdate erfolgreich installiert.</div>
+                    <div class="notification-item"><i class="fas fa-user-plus"></i> Neuer Benutzer hinzugefügt.</div>
+                    <div class="notification-item"><i class="fas fa-envelope"></i> Neue Nachricht im Kontaktformular.</div>
+                </div>
+            </div>
+        `;
     }
-    
-    updateMessageCount() {
-        const badge = document.getElementById('messageCount');
-        if (badge) {
-            badge.textContent = this.messages.length;
-        }
+
+    getBackupHTML() {
+        return `
+            <div class="page-content">
+                <div class="page-header">
+                    <h1><i class="fas fa-cloud-download-alt"></i> Backup & Restore</h1>
+                    <p>Exportiere oder importiere deine Admin-Daten</p>
+                </div>
+                <div class="backup-actions">
+                    <button onclick="adminPanel.exportBackup()"><i class="fas fa-download"></i> Backup Exportieren</button>
+                    <button onclick="adminPanel.importBackup()"><i class="fas fa-upload"></i> Backup Importieren</button>
+                </div>
+                <input type="file" id="backupFileInput" style="display:none;" accept="application/json">
+            </div>
+        `;
     }
-    
-    // Page Content Management
-    savePageContent(page) {
-        this.showLoading();
-        
-        setTimeout(() => {
-            this.hideLoading();
-            this.showSuccess('Änderungen gespeichert!');
-            console.log(`Saving ${page} content...`);
-        }, 1000);
+
+    exportBackup() {
+        const data = {
+            messages: JSON.parse(localStorage.getItem('adminMessages') || '[]'),
+            users: this.users,
+            projects: JSON.parse(localStorage.getItem('adminProjects') || '[]'),
+            media: JSON.parse(localStorage.getItem('adminMedia') || '[]')
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'klehausen-backup.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        this.showSuccess('Backup exportiert!');
     }
-    
-    previewChanges() {
-        window.open('../index.html', '_blank');
+
+    importBackup() {
+        const input = document.getElementById('backupFileInput');
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (data.messages) localStorage.setItem('adminMessages', JSON.stringify(data.messages));
+                    if (data.projects) localStorage.setItem('adminProjects', JSON.stringify(data.projects));
+                    if (data.media) localStorage.setItem('adminMedia', JSON.stringify(data.media));
+                    this.showSuccess('Backup importiert!');
+                    this.loadPageContent('overview');
+                } catch {
+                    this.showError('Ungültige Backup-Datei!');
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
     }
-    
-    // User Management
     editUser(id) {
         const user = this.users.find(u => u.id === id);
         if (user) {
@@ -786,9 +989,60 @@ class AdminPanel {
         }
     }
     
-    // Project Management
-    editProject(id) {
-        this.showSuccess(`Projekt ${id} wird bearbeitet...`);
+    // Page Content Management
+    savePageContent(page) {
+        this.showLoading();
+        
+        // Sammle alle Eingabewerte
+        const content = {};
+        
+        if (page === 'home') {
+            content.heroTitle = document.getElementById('hero-title')?.value || '';
+            content.heroDescription = document.getElementById('hero-description')?.value || '';
+            content.discordLink = document.getElementById('discord-link')?.value || '';
+        } else if (page === 'projects') {
+            content.projectsTitle = document.getElementById('projects-title')?.value || '';
+            content.projectsDescription = document.getElementById('projects-description')?.value || '';
+        }
+        
+        // Speichere in localStorage
+        localStorage.setItem(`pageContent_${page}`, JSON.stringify(content));
+        
+        setTimeout(() => {
+            this.hideLoading();
+            this.showSuccess('Änderungen gespeichert!');
+            console.log(`Saving ${page} content:`, content);
+        }, 1000);
+    }
+    
+    loadSavedPageContent(page) {
+        // Lade gespeicherte Inhalte
+        const savedContent = localStorage.getItem(`pageContent_${page}`);
+        if (savedContent) {
+            const content = JSON.parse(savedContent);
+            
+            setTimeout(() => {
+                if (page === 'home') {
+                    const heroTitle = document.getElementById('hero-title');
+                    const heroDesc = document.getElementById('hero-description');
+                    const discordLink = document.getElementById('discord-link');
+                    
+                    if (heroTitle) heroTitle.value = content.heroTitle || '';
+                    if (heroDesc) heroDesc.value = content.heroDescription || '';
+                    if (discordLink) discordLink.value = content.discordLink || '';
+                } else if (page === 'projects') {
+                    const projectsTitle = document.getElementById('projects-title');
+                    const projectsDesc = document.getElementById('projects-description');
+                    
+                    if (projectsTitle) projectsTitle.value = content.projectsTitle || '';
+                    if (projectsDesc) projectsDesc.value = content.projectsDescription || '';
+                }
+            }, 100);
+        }
+    }
+    
+    previewChanges() {
+        window.open('../index.html', '_blank');
     }
     
     // Event Binding

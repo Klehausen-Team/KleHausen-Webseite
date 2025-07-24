@@ -1,0 +1,53 @@
+{
+  "name": "klehausen-website",
+  "version": "1.0.0",
+  "description": "KleHausen Discord Community Website mit vollständigem Admin Panel und PWA-Funktionalität",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 3000 -o --cors",
+    "dev": "npx live-server . --port=3000 --open=/",
+    "build": "node scripts/build.js",
+    "admin": "npx live-server . --port=3001 --open=/admin/",
+    "icons": "node scripts/generate-icons.js",
+    "validate": "node scripts/validate.js",
+    "deploy": "npm run build && npm run validate",
+    "serve:prod": "npx http-server dist/ -p 8080 -o --cors",
+    "test": "node scripts/test.js",
+    "lint": "eslint *.js admin/*.js scripts/*.js",
+    "format": "prettier --write *.js *.html *.css admin/*.js admin/*.html admin/*.css"
+  },
+  "keywords": [
+    "discord",
+    "community",
+    "pwa",
+    "admin-panel",
+    "website",
+    "klehausen"
+  ],
+  "author": "KleHausen Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Klehausen-Team/KleHausen-Webseite.git"
+  },
+  "homepage": "https://klehausen-team.github.io/KleHausen-Webseite/",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2",
+    "sharp": "^0.33.2",
+    "fs-extra": "^11.2.0",
+    "chalk": "^5.3.0"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "not op_mini all"
+  ]
+}

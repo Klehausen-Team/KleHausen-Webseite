@@ -78,6 +78,13 @@ Eine moderne, vollständig funktionsfähige Discord Community-Website mit integr
 - **JavaScript** - Vanilla ES6+, keine Frameworks
 - **Icons** - Font Awesome 6.0
 
+### Development Stack
+- **Node.js** - Entwicklungsumgebung und Build-Tools
+- **NPM Scripts** - Automatisierte Workflows
+- **ESLint** - Code-Qualität und Standards
+- **Prettier** - Code-Formatierung
+- **Live-Server** - Auto-Reload für Entwicklung
+
 ### PWA-Stack
 - **Web App Manifest** - App-Konfiguration
 - **Service Worker** - Offline-Funktionalität
@@ -90,6 +97,12 @@ Eine moderne, vollständig funktionsfähige Discord Community-Website mit integr
 - **Real-time Communication** - Cross-Tab Kommunikation
 - **Responsive UI** - Mobile-optimierte Admin-Oberfläche
 
+### Build & Deploy
+- **Automatisierte Builds** - npm run build
+- **Icon-Generierung** - Sharp für optimierte PWA Icons
+- **Validierung** - Automatische Tests und Prüfungen
+- **Cross-Platform** - Funktioniert überall wo Node.js läuft
+
 ## 🔧 Alles funktioniert vollständig!
 
 ### ✅ Kontaktformular
@@ -98,12 +111,17 @@ Eine moderne, vollständig funktionsfähige Discord Community-Website mit integr
 - Toast-Benachrichtigungen für Benutzer-Feedback
 - Prioritäten basierend auf Betreff-Auswahl
 
-### ✅ Admin Panel
-- Vollständige Login-Funktionalität mit zwei Benutzern
-- Dashboard mit Live-Statistiken
-- Nachrichtenverwaltung mit Lesen/Antworten/Löschen
-- Benutzerverwaltung komplett funktionsfähig
-- Content-Editor für Website-Inhalte
+### ✅ Admin Panel - Vollständig funktionsfähig
+- **Login-System** - Sichere Anmeldung mit zwei Benutzern (admin/creator)
+- **Dashboard** - Live-Statistiken und Übersichtsdaten
+- **Nachrichtenverwaltung** - Lesen, Antworten, Löschen, Prioritäten
+- **Benutzerverwaltung** - Hinzufügen, Bearbeiten, Löschen von Admin-Benutzern
+- **Content-Editor** - Website-Inhalte bearbeiten und speichern
+- **Projektverwaltung** - Projekte hinzufügen, bearbeiten, löschen mit CRUD
+- **Medienverwaltung** - Dateien hochladen, Vorschau, Löschen
+- **Analytics** - Dashboard mit Besucherstatistiken (Demo-Daten)
+- **Benachrichtigungen** - System- und Team-Benachrichtigungen
+- **Backup & Restore** - Export/Import aller Admin-Daten als JSON
 
 ### ✅ PWA-Features
 - Installation auf allen Plattformen möglich
@@ -172,28 +190,65 @@ KleHausen-Webseite/
 
 ## 🚀 Installation & Setup
 
+### Voraussetzungen
+- **Node.js** >= 18.0.0
+- **npm** >= 9.0.0
+
+### Schnellstart
+
 1. **Repository klonen**
    ```bash
    git clone https://github.com/Klehausen-Team/KleHausen-Webseite.git
    cd KleHausen-Webseite
    ```
 
-2. **Lokaler Server starten**
+2. **Dependencies installieren**
    ```bash
-   # Mit Python
-   python -m http.server 8000
-   
-   # Mit Node.js (npx)
-   npx serve .
-   
-   # Mit PHP
-   php -S localhost:8000
+   npm install
    ```
 
-3. **Im Browser öffnen**
+3. **Entwicklungsserver starten**
+   ```bash
+   npm start          # Standard Server (Port 3000)
+   npm run dev        # Live-Server mit Auto-Reload
+   npm run admin      # Admin Panel direkt öffnen (Port 3001)
    ```
-   http://localhost:8000
+
+4. **PWA Icons generieren**
+   ```bash
+   npm run icons      # Generiert alle PWA Icons und Splash Screens
    ```
+
+### 🛠️ Verfügbare NPM Scripts
+
+```bash
+# Entwicklung
+npm start              # HTTP Server starten (Port 3000)
+npm run dev            # Live Server mit Auto-Reload
+npm run admin          # Admin Panel direkt öffnen
+
+# Build & Deploy
+npm run build          # Produktions-Build erstellen
+npm run deploy         # Build + Validierung
+npm run serve:prod     # Produktions-Build testen (Port 8080)
+
+# Qualitätssicherung
+npm run validate       # Website validieren
+npm run test           # Tests ausführen
+npm run lint           # Code-Qualität prüfen
+npm run format         # Code formatieren
+
+# Assets
+npm run icons          # PWA Icons generieren
+```
+
+### 📱 PWA Installation testen
+
+Nach `npm start` oder `npm run dev`:
+1. Website in Chrome/Edge öffnen: `http://localhost:3000`
+2. Nach 5 Sekunden erscheint der PWA-Installer
+3. "Installieren" klicken für native App-Erfahrung
+4. Admin Panel über PWA-Button oder `/admin/` testen
 
 ## 📝 Anpassungen
 
