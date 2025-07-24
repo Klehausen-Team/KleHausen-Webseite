@@ -1800,7 +1800,6 @@ select:focus {
         font-size: 0.8rem;
         padding-top: 1.5rem;
     }
-}
 
 /* Animations */
 @keyframes fadeInUp {

@@ -1,4 +1,4 @@
-// Admin Panel JavaScript
+// Admin Panel JavaScript - Vollständig funktionsfähig mit Logging
 class AdminPanel {
     constructor() {
         this.currentUser = null;
@@ -9,73 +9,205 @@ class AdminPanel {
             { id: 2, username: 'creator', password: 'Creator123!', role: 'editor', name: 'Content Creator' }
         ];
         
+        logInfo('ADMIN_PANEL', 'AdminPanel Constructor aufgerufen');
         this.init();
     }
     
     init() {
-        this.showSplash();
-        this.bindEvents();
-        this.checkExistingSession();
-        this.loadMessages();
+        logDebug('ADMIN_PANEL', 'AdminPanel wird initialisiert');
+        
+        try {
+            this.showSplash();
+            this.bindEvents();
+            this.checkExistingSession();
+            this.loadMessages();
+            
+            logSuccess('ADMIN_PANEL', 'AdminPanel erfolgreich initialisiert');
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler bei AdminPanel Initialisierung', error);
+        }
     }
     
     showSplash() {
+        logDebug('ADMIN_PANEL', 'Splash Screen wird angezeigt');
+        
         const splash = document.getElementById('adminSplash');
+        if (!splash) {
+            logError('ADMIN_PANEL', 'Splash Screen Element nicht gefunden');
+            return;
+        }
+        
         setTimeout(() => {
             splash.classList.add('fade-out');
+            logDebug('ADMIN_PANEL', 'Splash Screen fade-out gestartet');
+            
             setTimeout(() => {
                 splash.style.display = 'none';
+                logInfo('ADMIN_PANEL', 'Splash Screen ausgeblendet');
             }, 500);
         }, 2000);
     }
     
     bindEvents() {
-        // Login Form
-        const loginForm = document.getElementById('loginForm');
-        loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+        logDebug('ADMIN_PANEL', 'Event Listener werden gebunden');
         
-        // Password Toggle
-        const togglePassword = document.getElementById('togglePassword');
-        togglePassword.addEventListener('click', () => this.togglePasswordVisibility());
-        
-        // User Dropdown
-        const userDropdown = document.getElementById('userDropdown');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        
-        userDropdown?.addEventListener('click', () => {
-            dropdownMenu.classList.toggle('show');
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!userDropdown?.contains(e.target)) {
-                dropdownMenu?.classList.remove('show');
+        try {
+            // Login Form
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+                logDebug('ADMIN_PANEL', 'Login Form Event Listener gebunden');
+            } else {
+                logWarn('ADMIN_PANEL', 'Login Form nicht gefunden');
             }
-        });
-        
-        // Logout
-        const logoutBtn = document.getElementById('logoutBtn');
-        logoutBtn?.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.logout();
-        });
-        
-        // Menu Navigation
-        const menuLinks = document.querySelectorAll('.menu-link');
-        menuLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = link.dataset.page;
-                this.navigateToPage(page);
+            
+            // Password Toggle
+            const togglePassword = document.getElementById('togglePassword');
+            if (togglePassword) {
+                togglePassword.addEventListener('click', () => this.togglePasswordVisibility());
+                logDebug('ADMIN_PANEL', 'Password Toggle Event Listener gebunden');
+            } else {
+                logWarn('ADMIN_PANEL', 'Password Toggle nicht gefunden');
+            }
+            
+            // User Dropdown
+            const userDropdown = document.getElementById('userDropdown');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            if (userDropdown && dropdownMenu) {
+                userDropdown.addEventListener('click', () => {
+                    dropdownMenu.classList.toggle('show');
+                    logDebug('ADMIN_PANEL', 'User Dropdown Toggle ausgeführt');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!userDropdown.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+                logDebug('ADMIN_PANEL', 'User Dropdown Event Listener gebunden');
+            } else {
+                logWarn('ADMIN_PANEL', 'User Dropdown Elemente nicht gefunden');
+            }
+            
+            // Logout
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.logout();
+                });
+                logDebug('ADMIN_PANEL', 'Logout Button Event Listener gebunden');
+            } else {
+                logWarn('ADMIN_PANEL', 'Logout Button nicht gefunden');
+            }
+            
+            // Menu Navigation
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = link.dataset.page;
+                    this.navigateToPage(page);
+                });
             });
-        });
+            logDebug('ADMIN_PANEL', `${menuLinks.length} Menu Links Event Listener gebunden`);
+            
+            logSuccess('ADMIN_PANEL', 'Alle Event Listener erfolgreich gebunden');
+            
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Binden der Event Listener', error);
+        }
     }
     
     checkExistingSession() {
-        const savedUser = localStorage.getItem('adminUser');
-        if (savedUser) {
-            this.currentUser = JSON.parse(savedUser);
-            this.showDashboard();
+        logDebug('ADMIN_PANEL', 'Prüfe bestehende Session');
+        
+        try {
+            const savedUser = localStorage.getItem('adminUser');
+            if (savedUser) {
+                this.currentUser = JSON.parse(savedUser);
+                logInfo('ADMIN_PANEL', `Session gefunden für Benutzer: ${this.currentUser.username}`);
+                this.showDashboard();
+            } else {
+                logDebug('ADMIN_PANEL', 'Keine bestehende Session gefunden');
+            }
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Prüfen der Session', error);
+            localStorage.removeItem('adminUser');
+        }
+    }
+    
+    loadMessages() {
+        logDebug('ADMIN_PANEL', 'Lade Nachrichten aus LocalStorage');
+        
+        try {
+            const savedMessages = localStorage.getItem('adminMessages');
+            if (savedMessages) {
+                this.messages = JSON.parse(savedMessages);
+                logInfo('ADMIN_PANEL', `${this.messages.length} Nachrichten aus LocalStorage geladen`);
+            } else {
+                // Demo messages for testing
+                this.messages = [
+                {
+                    id: 1,
+                    name: 'Max Mustermann',
+                    email: 'max@beispiel.de',
+                    subject: 'Kollaboration',
+                    message: 'Hallo! Ich würde gerne mit eurem Team zusammenarbeiten. Ich bin Content Creator im Gaming-Bereich und habe eigene YouTube und Twitch Kanäle.',
+                    timestamp: new Date(Date.now() - 86400000).toLocaleString('de-DE'),
+                    read: false,
+                    priority: 'high'
+                },
+                {
+                    id: 2,
+                    name: 'Anna Schmidt', 
+                    email: 'anna@test.de',
+                    subject: 'Feedback',
+                    message: 'Eure Webseite sieht super aus! Besonders das PWA Design gefällt mir. Macht weiter so!',
+                    timestamp: new Date(Date.now() - 172800000).toLocaleString('de-DE'),
+                    read: true,
+                    priority: 'low'
+                },
+                {
+                    id: 3,
+                    name: 'Tom Weber',
+                    email: 'tom.weber@gmail.com', 
+                    subject: 'Projekt Idee',
+                    message: 'Hi! Ich habe eine Idee für ein neues Minecraft Plugin. Könnt ihr euch das mal anschauen? Wäre super wenn wir zusammenarbeiten könnten.',
+                    timestamp: new Date(Date.now() - 259200000).toLocaleString('de-DE'),
+                    read: false,
+                    priority: 'medium'
+                }
+            ];
+            this.saveMessages();
+            logInfo('ADMIN_PANEL', 'Demo Nachrichten erstellt');
+        }
+        
+        // Listen for new messages from main website
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'newMessage') {
+                const data = JSON.parse(e.newValue || '{}');
+                if (data.message && Date.now() - data.timestamp < 5000) {
+                    this.messages.push(data.message);
+                    this.saveMessages();
+                    this.showSuccess('Neue Nachricht erhalten!');
+                    logInfo('ADMIN_PANEL', 'Neue Nachricht über Storage Event erhalten');
+                    
+                    if (this.currentPage === 'messages') {
+                        this.loadPageContent('messages');
+                    }
+                    this.updateMessageCount();
+                }
+            }
+        });
+        
+        logSuccess('ADMIN_PANEL', 'Nachrichten erfolgreich geladen');
+        
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Laden der Nachrichten', error);
+            this.messages = [];
         }
     }
     
@@ -122,22 +254,25 @@ class AdminPanel {
         const errorDiv = document.getElementById('loginError');
         const errorMessage = document.getElementById('errorMessage');
         
-        errorMessage.textContent = message;
-        errorDiv.classList.add('show');
-        
-        setTimeout(() => {
-            errorDiv.classList.remove('show');
-        }, 3000);
+        if (errorDiv && errorMessage) {
+            errorMessage.textContent = message;
+            errorDiv.classList.add('show');
+            
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 3000);
+        }
     }
     
     showDashboard() {
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('adminDashboard').style.display = 'grid';
+        const loginContainer = document.getElementById('loginContainer');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const userName = document.getElementById('userName');
         
-        // Update user name
-        document.getElementById('userName').textContent = this.currentUser.name;
+        if (loginContainer) loginContainer.style.display = 'none';
+        if (adminDashboard) adminDashboard.style.display = 'grid';
+        if (userName) userName.textContent = this.currentUser.name;
         
-        // Load default page
         this.navigateToPage('overview');
         this.updateMessageCount();
     }
@@ -146,57 +281,103 @@ class AdminPanel {
         localStorage.removeItem('adminUser');
         this.currentUser = null;
         
-        document.getElementById('adminDashboard').style.display = 'none';
-        document.getElementById('loginContainer').style.display = 'flex';
+        const loginContainer = document.getElementById('loginContainer');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const loginForm = document.getElementById('loginForm');
         
-        // Clear form
-        document.getElementById('loginForm').reset();
+        if (adminDashboard) adminDashboard.style.display = 'none';
+        if (loginContainer) loginContainer.style.display = 'flex';
+        if (loginForm) loginForm.reset();
         
         this.showSuccess('Erfolgreich abgemeldet!');
     }
     
     navigateToPage(page) {
-        // Update active menu item
-        document.querySelectorAll('.menu-link').forEach(link => {
-            link.classList.remove('active');
-        });
+        logDebug('ADMIN_PANEL', `Navigation zu Seite: ${page}`);
         
-        document.querySelector(`[data-page="${page}"]`)?.classList.add('active');
-        
-        this.currentPage = page;
-        this.loadPageContent(page);
+        try {
+            // Update active menu item
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            const activeLink = document.querySelector(`[data-page="${page}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+                logDebug('ADMIN_PANEL', `Menu-Link aktiviert für: ${page}`);
+            } else {
+                logWarn('ADMIN_PANEL', `Kein Menu-Link gefunden für Seite: ${page}`);
+            }
+            
+            this.currentPage = page;
+            this.loadPageContent(page);
+            
+            logSuccess('ADMIN_PANEL', `Navigation erfolgreich zu: ${page}`);
+        } catch (error) {
+            logError('ADMIN_PANEL', `Fehler bei Navigation zu ${page}`, error);
+        }
     }
     
     loadPageContent(page) {
-        const contentDiv = document.getElementById('adminContent');
+        logDebug('ADMIN_PANEL', `Lade Content für Seite: ${page}`);
         
-        switch(page) {
-            case 'overview':
-                contentDiv.innerHTML = this.getOverviewHTML();
-                break;
-            case 'messages':
-                contentDiv.innerHTML = this.getMessagesHTML();
-                this.bindMessageEvents();
-                break;
-            case 'pages':
-                contentDiv.innerHTML = this.getPagesHTML();
-                this.bindPageEditEvents();
-                break;
-            case 'projects':
-                contentDiv.innerHTML = this.getProjectsHTML();
-                break;
-            case 'users':
-                contentDiv.innerHTML = this.getUsersHTML();
-                this.bindUserEvents();
-                break;
-            case 'media':
-                contentDiv.innerHTML = this.getMediaHTML();
-                break;
-            case 'analytics':
-                contentDiv.innerHTML = this.getAnalyticsHTML();
-                break;
-            default:
-                contentDiv.innerHTML = '<div class="page-content"><h1>Seite nicht gefunden</h1></div>';
+        const contentDiv = document.getElementById('adminContent');
+        if (!contentDiv) {
+            logError('ADMIN_PANEL', 'adminContent Element nicht gefunden');
+            return;
+        }
+        
+        try {
+            switch(page) {
+                case 'overview':
+                    contentDiv.innerHTML = this.getOverviewHTML();
+                    logInfo('ADMIN_PANEL', 'Overview-Content geladen');
+                    break;
+                case 'messages':
+                    contentDiv.innerHTML = this.getMessagesHTML();
+                    this.bindMessageEvents();
+                    logInfo('ADMIN_PANEL', 'Messages-Content geladen');
+                    break;
+                case 'pages':
+                    contentDiv.innerHTML = this.getPagesHTML();
+                    this.bindPageEditEvents();
+                    this.loadSavedPageContent('home'); // Lade gespeicherte Inhalte
+                    logInfo('ADMIN_PANEL', 'Pages-Content geladen');
+                    break;
+                case 'projects':
+                    contentDiv.innerHTML = this.getProjectsHTML();
+                    logInfo('ADMIN_PANEL', 'Projects-Content geladen');
+                    break;
+                case 'users':
+                    contentDiv.innerHTML = this.getUsersHTML();
+                    this.bindUserEvents();
+                    logInfo('ADMIN_PANEL', 'Users-Content geladen');
+                    break;
+                case 'media':
+                    contentDiv.innerHTML = this.getMediaHTML();
+                    logInfo('ADMIN_PANEL', 'Media-Content geladen');
+                    break;
+                case 'analytics':
+                    contentDiv.innerHTML = this.getAnalyticsHTML();
+                    logInfo('ADMIN_PANEL', 'Analytics-Content geladen');
+                    break;
+                case 'notifications':
+                    contentDiv.innerHTML = this.getNotificationsHTML();
+                    logInfo('ADMIN_PANEL', 'Notifications-Content geladen');
+                    break;
+                case 'backup':
+                    contentDiv.innerHTML = this.getBackupHTML();
+                    logInfo('ADMIN_PANEL', 'Backup-Content geladen');
+                    break;
+                default:
+                    logWarn('ADMIN_PANEL', `Unbekannte Seite angefordert: ${page}`);
+                    contentDiv.innerHTML = '<div class="error-message">Seite nicht gefunden</div>';
+            }
+            
+            logSuccess('ADMIN_PANEL', `Content erfolgreich geladen für: ${page}`);
+        } catch (error) {
+            logError('ADMIN_PANEL', `Fehler beim Laden des Contents für ${page}`, error);
+            contentDiv.innerHTML = '<div class="error-message">Fehler beim Laden der Seite</div>';
         }
     }
     
@@ -305,7 +486,7 @@ class AdminPanel {
         const unreadCount = this.messages.filter(m => !m.read).length;
         
         const messagesHTML = this.messages
-            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)) // Neueste zuerst
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
             .map(msg => {
                 const priorityClass = msg.priority || 'low';
                 const priorityIcon = {
@@ -457,47 +638,169 @@ class AdminPanel {
                             </button>
                         </div>
                     </div>
-                    
-                    <div class="tab-content" id="team-tab">
-                        <div class="editor-section">
-                            <h3>Team Bereich</h3>
-                            <div class="form-group">
-                                <label>Team Größe</label>
-                                <input type="text" id="team-size" value="4-8" />
-                            </div>
-                            <div class="form-group">
-                                <label>Team Beschreibung</label>
-                                <textarea id="team-description" rows="4">Unser Team besteht aus leidenschaftlichen Content Creators, Entwicklern und Gamern, die zusammen innovative Projekte realisieren.</textarea>
-                            </div>
-                        </div>
-                        
-                        <div class="editor-actions">
-                            <button class="btn-save" onclick="adminPanel.savePageContent('team')">
-                                <i class="fas fa-save"></i> Änderungen speichern
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="tab-content" id="contact-tab">
-                        <div class="editor-section">
-                            <h3>Kontakt Bereich</h3>
-                            <div class="form-group">
-                                <label>Social Media Links</label>
-                                <input type="url" id="github-link" placeholder="GitHub URL" value="https://github.com/your-github" />
-                                <input type="url" id="youtube-link" placeholder="YouTube URL" value="https://youtube.com/your-channel" />
-                                <input type="url" id="twitch-link" placeholder="Twitch URL" value="https://twitch.tv/your-channel" />
-                            </div>
-                        </div>
-                        
-                        <div class="editor-actions">
-                            <button class="btn-save" onclick="adminPanel.savePageContent('contact')">
-                                <i class="fas fa-save"></i> Änderungen speichern
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
         `;
+    }
+    
+    getProjectsHTML() {
+        let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+        if (projects.length === 0) {
+            projects = [
+                {id: 1, name: 'Web-basierter Desktop', status: 'Aktiv in Entwicklung', desc: 'Ein innovatives webbasiertes Desktop-System', icon: 'fas fa-desktop'},
+                {id: 2, name: 'Minecraft Server', status: 'Pausiert', desc: 'Custom Minecraft Server mit Plugins', icon: 'fas fa-cube'}
+            ];
+            localStorage.setItem('adminProjects', JSON.stringify(projects));
+        }
+        const projectHTML = projects.map((p, idx) => `
+            <div class="project-card ${p.status.includes('Aktiv') ? 'active' : 'paused'}">
+                <div class="project-icon"><i class="${p.icon}"></i></div>
+                <h3>${p.name}</h3>
+                <p>${p.desc}</p>
+                <div class="project-status ${p.status.includes('Aktiv') ? 'active' : 'paused'}">
+                    <i class="${p.status.includes('Aktiv') ? 'fas fa-circle' : 'fas fa-pause-circle'}"></i> ${p.status}
+                </div>
+                <div class="project-actions">
+                    <button onclick="adminPanel.editProject(${p.id})">Bearbeiten</button>
+                    <button onclick="adminPanel.deleteProject(${p.id})">Löschen</button>
+                </div>
+            </div>
+        `).join('');
+        return `
+            <div class="page-content">
+                <div class="page-header">
+                    <h1><i class="fas fa-project-diagram"></i> Projekte verwalten</h1>
+                    <p>Projekt-Inhalte bearbeiten und verwalten</p>
+                    <button class="btn-add-project" onclick="adminPanel.addProject()"><i class="fas fa-plus"></i> Neues Projekt</button>
+                </div>
+                <div class="projects-overview">${projectHTML}</div>
+            </div>
+        `;
+    }
+
+    addProject() {
+        logDebug('ADMIN_PANEL', 'Add Project Dialog geöffnet');
+        
+        try {
+            const name = prompt('Projektname:');
+            if (!name || name.trim() === '') {
+                logDebug('ADMIN_PANEL', 'Add Project abgebrochen - kein Name eingegeben');
+                return;
+            }
+            
+            const desc = prompt('Beschreibung:');
+            if (!desc || desc.trim() === '') {
+                logWarn('ADMIN_PANEL', 'Projekt ohne Beschreibung erstellt');
+            }
+            
+            const status = prompt('Status (z.B. Aktiv in Entwicklung, Pausiert):', 'Aktiv in Entwicklung');
+            const icon = prompt('FontAwesome Icon-Klasse:', 'fas fa-rocket');
+            
+            let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+            const id = projects.length > 0 ? Math.max(...projects.map(p => p.id)) + 1 : 1;
+            
+            const newProject = {
+                id, 
+                name: name.trim(), 
+                desc: desc ? desc.trim() : '', 
+                status: status || 'Aktiv in Entwicklung', 
+                icon: icon || 'fas fa-rocket',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            projects.push(newProject);
+            localStorage.setItem('adminProjects', JSON.stringify(projects));
+            
+            logSuccess('ADMIN_PANEL', `Neues Projekt erstellt: ${name}`);
+            this.showSuccess('Projekt hinzugefügt!');
+            this.loadPageContent('projects');
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Hinzufügen des Projekts', error);
+            this.showError('Fehler beim Hinzufügen des Projekts');
+        }
+    }
+
+    editProject(id) {
+        logDebug('ADMIN_PANEL', `Edit Project Dialog geöffnet für ID: ${id}`);
+        
+        try {
+            let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+            const idx = projects.findIndex(p => p.id === id);
+            
+            if (idx === -1) {
+                logError('ADMIN_PANEL', `Projekt nicht gefunden: ID ${id}`);
+                this.showError('Projekt nicht gefunden');
+                return;
+            }
+            
+            const p = projects[idx];
+            logInfo('ADMIN_PANEL', `Bearbeite Projekt: ${p.name}`);
+            
+            const name = prompt('Projektname:', p.name);
+            if (name === null) {
+                logDebug('ADMIN_PANEL', 'Edit Project abgebrochen');
+                return;
+            }
+            
+            if (name.trim() === '') {
+                logWarn('ADMIN_PANEL', 'Leerer Projektname eingegeben');
+                this.showError('Projektname darf nicht leer sein');
+                return;
+            }
+            
+            const desc = prompt('Beschreibung:', p.desc);
+            const status = prompt('Status:', p.status);
+            const icon = prompt('FontAwesome Icon-Klasse:', p.icon);
+            
+            const updatedProject = {
+                ...p, 
+                name: name.trim(), 
+                desc: desc ? desc.trim() : p.desc, 
+                status: status || p.status, 
+                icon: icon || p.icon,
+                updatedAt: new Date().toISOString()
+            };
+            
+            projects[idx] = updatedProject;
+            localStorage.setItem('adminProjects', JSON.stringify(projects));
+            
+            logSuccess('ADMIN_PANEL', `Projekt aktualisiert: ${name}`);
+            this.showSuccess('Projekt aktualisiert!');
+            this.loadPageContent('projects');
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Bearbeiten des Projekts', error);
+            this.showError('Fehler beim Bearbeiten des Projekts');
+        }
+    }
+
+    deleteProject(id) {
+        logDebug('ADMIN_PANEL', `Delete Project angefordert für ID: ${id}`);
+        
+        try {
+            let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+            const project = projects.find(p => p.id === id);
+            
+            if (!project) {
+                logError('ADMIN_PANEL', `Projekt nicht gefunden: ID ${id}`);
+                this.showError('Projekt nicht gefunden');
+                return;
+            }
+            
+            if (confirm(`Projekt "${project.name}" wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden.`)) {
+                projects = projects.filter(p => p.id !== id);
+                localStorage.setItem('adminProjects', JSON.stringify(projects));
+                
+                logSuccess('ADMIN_PANEL', `Projekt gelöscht: ${project.name}`);
+                this.showSuccess('Projekt gelöscht!');
+                this.loadPageContent('projects');
+            } else {
+                logDebug('ADMIN_PANEL', `Löschvorgang abgebrochen für Projekt: ${project.name}`);
+            }
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Löschen des Projekts', error);
+            this.showError('Fehler beim Löschen des Projekts');
+        }
     }
     
     getUsersHTML() {
@@ -541,599 +844,133 @@ class AdminPanel {
         `;
     }
     
-    getProjectsHTML() {
-        return `
-            <div class="page-content">
-                <div class="page-header">
-                    <div class="header-info">
-                        <h1><i class="fas fa-project-diagram"></i> Projekte verwalten</h1>
-                        <p>Projekt-Inhalte bearbeiten und verwalten</p>
-                    </div>
-                    <button class="btn-add-project" onclick="adminPanel.addProject()">
-                        <i class="fas fa-plus"></i> Neues Projekt
-                    </button>
-                </div>
-                
-                <div class="projects-grid">
-                    <div class="project-editor-card">
-                        <div class="project-icon">
-                            <i class="fas fa-desktop"></i>
-                        </div>
-                        <h3>Web-basierter Desktop</h3>
-                        <div class="project-status active">
-                            <i class="fas fa-circle"></i> Aktiv in Entwicklung
-                        </div>
-                        <div class="project-editor-actions">
-                            <button class="btn-edit-project" onclick="adminPanel.editProject(1)">
-                                <i class="fas fa-edit"></i> Bearbeiten
-                            </button>
-                            <button class="btn-project-settings" onclick="adminPanel.projectSettings(1)">
-                                <i class="fas fa-cog"></i> Einstellungen
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="project-editor-card">
-                        <div class="project-icon">
-                            <i class="fas fa-cube"></i>
-                        </div>
-                        <h3>Minecraft Server</h3>
-                        <div class="project-status paused">
-                            <i class="fas fa-pause-circle"></i> Entwicklung pausiert
-                        </div>
-                        <div class="project-editor-actions">
-                            <button class="btn-edit-project" onclick="adminPanel.editProject(2)">
-                                <i class="fas fa-edit"></i> Bearbeiten
-                            </button>
-                            <button class="btn-project-settings" onclick="adminPanel.projectSettings(2)">
-                                <i class="fas fa-cog"></i> Einstellungen
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="project-editor-card">
-                        <div class="project-icon">
-                            <i class="fas fa-share-alt"></i>
-                        </div>
-                        <h3>Content Creator Gruppe</h3>
-                        <div class="project-status active">
-                            <i class="fas fa-circle"></i> Aktiv
-                        </div>
-                        <div class="project-editor-actions">
-                            <button class="btn-edit-project" onclick="adminPanel.editProject(3)">
-                                <i class="fas fa-edit"></i> Bearbeiten
-                            </button>
-                            <button class="btn-project-settings" onclick="adminPanel.projectSettings(3)">
-                                <i class="fas fa-cog"></i> Einstellungen
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="project-stats">
-                    <h2>Projekt Statistiken</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-tasks"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3>3</h3>
-                                <p>Aktive Projekte</p>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-code-branch"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3>12</h3>
-                                <p>Git Repositories</p>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3>4-8</h3>
-                                <p>Mitwirkende</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-    
     getMediaHTML() {
-        return `
-            <div class="page-content">
-                <div class="page-header">
-                    <div class="header-info">
-                        <h1><i class="fas fa-photo-video"></i> Medien verwalten</h1>
-                        <p>Bilder, Videos und andere Medien hochladen und verwalten</p>
-                    </div>
-                    <button class="btn-upload-media" onclick="adminPanel.uploadMedia()">
-                        <i class="fas fa-upload"></i> Datei hochladen
-                    </button>
+        const media = JSON.parse(localStorage.getItem('adminMedia') || '[]');
+        const mediaHTML = media.length > 0 ? media.map((file, idx) => `
+            <div class="media-item">
+                <div class="media-preview">
+                    ${file.type.startsWith('image') ? `<img src="${file.data}" alt="${file.name}" style="max-width:80px;max-height:80px;">` : `<i class=\"fas fa-file-video\"></i>`}
                 </div>
-                
-                <div class="media-grid">
-                    <div class="media-item">
-                        <div class="media-preview">
-                            <i class="fas fa-image"></i>
-                        </div>
-                        <div class="media-info">
-                            <h4>Logo.png</h4>
-                            <p>512x512px • 45KB</p>
-                        </div>
-                        <div class="media-actions">
-                            <button class="btn-edit-media"><i class="fas fa-edit"></i></button>
-                            <button class="btn-delete-media"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                    
-                    <div class="media-item">
-                        <div class="media-preview">
-                            <i class="fas fa-file-video"></i>
-                        </div>
-                        <div class="media-info">
-                            <h4>Intro.mp4</h4>
-                            <p>1920x1080px • 2.3MB</p>
-                        </div>
-                        <div class="media-actions">
-                            <button class="btn-edit-media"><i class="fas fa-edit"></i></button>
-                            <button class="btn-delete-media"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
+                <div class="media-info">
+                    <h4>${file.name}</h4>
+                    <p>${file.size} KB</p>
                 </div>
-                
-                <div class="upload-zone" id="uploadZone">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <h3>Dateien hier ablegen</h3>
-                    <p>oder klicken zum Auswählen</p>
-                    <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display: none;">
+                <div class="media-actions">
+                    <button class="btn-delete-media" onclick="adminPanel.deleteMedia(${idx})"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
-        `;
-    }
-    
-    getAnalyticsHTML() {
+        `).join('') : '<div class="no-messages"><i class="fas fa-images"></i><p>Keine Medien hochgeladen</p></div>';
         return `
             <div class="page-content">
                 <div class="page-header">
-                    <div class="header-info">
-                        <h1><i class="fas fa-chart-line"></i> Analytics</h1>
-                        <p>Website-Statistiken und Besucheranalyse</p>
-                    </div>
-                    <select class="date-range-select">
-                        <option value="7">Letzte 7 Tage</option>
-                        <option value="30">Letzte 30 Tage</option>
-                        <option value="90">Letzte 3 Monate</option>
-                    </select>
+                    <h1><i class="fas fa-photo-video"></i> Medien verwalten</h1>
+                    <p>Bilder, Videos und andere Medien verwalten</p>
+                    <button class="btn-upload-media" onclick="adminPanel.uploadMedia()"><i class="fas fa-upload"></i> Datei hochladen</button>
                 </div>
-                
-                <div class="analytics-stats">
-                    <div class="analytics-card">
-                        <div class="analytics-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="analytics-data">
-                            <h3>1,247</h3>
-                            <p>Besucher</p>
-                            <span class="trend positive">
-                                <i class="fas fa-arrow-up"></i> +12%
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <div class="analytics-icon">
-                            <i class="fas fa-eye"></i>
-                        </div>
-                        <div class="analytics-data">
-                            <h3>3,891</h3>
-                            <p>Seitenaufrufe</p>
-                            <span class="trend positive">
-                                <i class="fas fa-arrow-up"></i> +8%
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <div class="analytics-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="analytics-data">
-                            <h3>2:34</h3>
-                            <p>Ø Besuchsdauer</p>
-                            <span class="trend negative">
-                                <i class="fas fa-arrow-down"></i> -3%
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <div class="analytics-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <div class="analytics-data">
-                            <h3>68%</h3>
-                            <p>Mobile Nutzer</p>
-                            <span class="trend positive">
-                                <i class="fas fa-arrow-up"></i> +5%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="analytics-charts">
-                    <div class="chart-container">
-                        <h3>Besucherstatistiken</h3>
-                        <div class="chart-placeholder">
-                            <i class="fas fa-chart-area"></i>
-                            <p>Chart wird geladen...</p>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container">
-                        <h3>Top Seiten</h3>
-                        <div class="top-pages">
-                            <div class="page-stat">
-                                <span class="page-name">/ (Home)</span>
-                                <span class="page-views">1,234 Aufrufe</span>
-                            </div>
-                            <div class="page-stat">
-                                <span class="page-name">/projekte</span>
-                                <span class="page-views">892 Aufrufe</span>
-                            </div>
-                            <div class="page-stat">
-                                <span class="page-name">/team</span>
-                                <span class="page-views">567 Aufrufe</span>
-                            </div>
-                            <div class="page-stat">
-                                <span class="page-name">/kontakt</span>
-                                <span class="page-views">345 Aufrufe</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="realtime-data">
-                    <h3>Live Daten</h3>
-                    <div class="realtime-stats">
-                        <div class="realtime-item">
-                            <span class="status-dot active"></span>
-                            <span>3 Nutzer online</span>
-                        </div>
-                        <div class="realtime-item">
-                            <span class="status-dot"></span>
-                            <span>Letzte Aktivität: vor 2 Min.</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="media-grid">${mediaHTML}</div>
             </div>
         `;
     }
 
-    // Project Management Methods
-    addProject() {
-        const name = prompt('Projektname:');
-        if (name) {
-            this.showSuccess(`Projekt "${name}" wurde hinzugefügt`);
-            this.loadPageContent('projects');
-        }
-    }
-
-    editProject(id) {
-        this.showSuccess(`Projekt ${id} wird bearbeitet...`);
-    }
-
-    projectSettings(id) {
-        this.showSuccess(`Einstellungen für Projekt ${id} geöffnet`);
-    }
-
-    // Media Management Methods  
     uploadMedia() {
+        logDebug('ADMIN_PANEL', 'Media Upload gestartet');
+        
         const input = document.createElement('input');
         input.type = 'file';
-        input.multiple = true;
         input.accept = 'image/*,video/*';
+        input.multiple = true;
         input.onchange = (e) => {
             const files = Array.from(e.target.files);
-            this.showSuccess(`${files.length} Datei(en) werden hochgeladen...`);
+            logInfo('ADMIN_PANEL', `${files.length} Dateien für Upload ausgewählt`);
+            
+            files.forEach(file => {
+                logDebug('ADMIN_PANEL', `Verarbeite Datei: ${file.name} (${Math.round(file.size/1024)}KB)`);
+                
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const media = JSON.parse(localStorage.getItem('adminMedia') || '[]');
+                        media.push({
+                            name: file.name,
+                            size: Math.round(file.size/1024),
+                            type: file.type,
+                            data: ev.target.result,
+                            uploadedAt: new Date().toISOString()
+                        });
+                        localStorage.setItem('adminMedia', JSON.stringify(media));
+                        logSuccess('ADMIN_PANEL', `Datei erfolgreich hochgeladen: ${file.name}`);
+                        this.showSuccess('Datei hochgeladen!');
+                        this.loadPageContent('media');
+                    } catch (error) {
+                        logError('ADMIN_PANEL', 'Fehler beim Speichern der Datei', error);
+                        this.showError('Fehler beim Hochladen der Datei');
+                    }
+                };
+                reader.onerror = () => {
+                    logError('ADMIN_PANEL', `Fehler beim Lesen der Datei: ${file.name}`);
+                    this.showError(`Fehler beim Lesen der Datei: ${file.name}`);
+                };
+                reader.readAsDataURL(file);
+            });
         };
         input.click();
     }
-                            <label>Beschreibung</label>
-                            <textarea rows="3">Ein innovatives webbasiertes Desktop-System, das eine vollständige Desktop-Erfahrung im Browser bietet.</textarea>
-                        </div>
-                        <button class="btn-save">Speichern</button>
-                    </div>
-                    
-                    <div class="project-editor-card">
-                        <h3>Minecraft Server</h3>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select>
-                                <option>Aktiv in Entwicklung</option>
-                                <option selected>Pausiert</option>
-                                <option>Abgeschlossen</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Beschreibung</label>
-                            <textarea rows="3">Unser eigener Minecraft Server mit custom Features und Plugins für die Community.</textarea>
-                        </div>
-                        <button class="btn-save">Speichern</button>
-                    </div>
-                    
-                    <div class="project-editor-card">
-                        <h3>Content Creator Gruppe</h3>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select>
-                                <option selected>Aktiv</option>
-                                <option>Pausiert</option>
-                                <option>Abgeschlossen</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Beschreibung</label>
-                            <textarea rows="3">Unsere kleine aber feine Content Creator Gruppe produziert gemeinsam verschiedensten Content.</textarea>
-                        </div>
-                        <button class="btn-save">Speichern</button>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-    
-    getMediaHTML() {
-        return `
-            <div class="page-content">
-                <div class="page-header">
-                    <h1><i class="fas fa-images"></i> Medien verwalten</h1>
-                    <p>Bilder und Dateien hochladen und verwalten</p>
-                </div>
+
+    deleteMedia(idx) {
+        logDebug('ADMIN_PANEL', `Media Delete angefordert für Index: ${idx}`);
+        
+        try {
+            const media = JSON.parse(localStorage.getItem('adminMedia') || '[]');
+            
+            if (media[idx]) {
+                const fileName = media[idx].name;
                 
-                <div class="media-upload">
-                    <div class="upload-area" id="uploadArea">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <h3>Dateien hierher ziehen oder klicken zum Hochladen</h3>
-                        <p>Unterstützte Formate: JPG, PNG, SVG, PDF</p>
-                        <input type="file" id="fileInput" multiple accept="image/*,.pdf" style="display: none;">
-                    </div>
-                </div>
-                
-                <div class="media-grid">
-                    <div class="media-item">
-                        <div class="media-preview">
-                            <i class="fas fa-image"></i>
-                        </div>
-                        <div class="media-info">
-                            <h4>logo.png</h4>
-                            <p>125 KB</p>
-                        </div>
-                        <div class="media-actions">
-                            <button class="btn-copy">URL kopieren</button>
-                            <button class="btn-delete">Löschen</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+                if (confirm(`Datei "${fileName}" wirklich löschen?`)) {
+                    media.splice(idx, 1);
+                    localStorage.setItem('adminMedia', JSON.stringify(media));
+                    logSuccess('ADMIN_PANEL', `Datei gelöscht: ${fileName}`);
+                    this.showSuccess('Datei gelöscht!');
+                    this.loadPageContent('media');
+                } else {
+                    logDebug('ADMIN_PANEL', `Löschvorgang abgebrochen für: ${fileName}`);
+                }
+            } else {
+                logError('ADMIN_PANEL', `Ungültiger Media-Index: ${idx}`);
+                this.showError('Datei nicht gefunden');
+            }
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Löschen der Datei', error);
+            this.showError('Fehler beim Löschen der Datei');
+        }
     }
     
     getAnalyticsHTML() {
         return `
             <div class="page-content">
                 <div class="page-header">
-                    <h1><i class="fas fa-chart-bar"></i> Statistiken</h1>
-                    <p>Website-Analytik und Metriken</p>
+                    <h1><i class="fas fa-chart-line"></i> Analytics</h1>
+                    <p>Website-Statistiken und Besucheranalyse</p>
                 </div>
-                
-                <div class="analytics-dashboard">
-                    <div class="analytics-card">
-                        <h3>Besucher heute</h3>
-                        <div class="metric">
-                            <span class="number">42</span>
-                            <span class="trend up">+12%</span>
-                        </div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <h3>PWA Installationen</h3>
-                        <div class="metric">
-                            <span class="number">8</span>
-                            <span class="trend up">+3</span>
-                        </div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <h3>Discord Klicks</h3>
-                        <div class="metric">
-                            <span class="number">23</span>
-                            <span class="trend up">+5</span>
-                        </div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <h3>Kontakt-Nachrichten</h3>
-                        <div class="metric">
-                            <span class="number">${this.messages.length}</span>
-                            <span class="trend">Neu</span>
-                        </div>
-                    </div>
+                <div class="analytics-stats">
+                    <div class="analytics-card"><i class="fas fa-users"></i><h3>1.247</h3><p>Besucher</p></div>
+                    <div class="analytics-card"><i class="fas fa-eye"></i><h3>3.891</h3><p>Seitenaufrufe</p></div>
+                    <div class="analytics-card"><i class="fas fa-clock"></i><h3>2:34</h3><p>Ø Besuchsdauer</p></div>
+                    <div class="analytics-card"><i class="fas fa-mobile-alt"></i><h3>68%</h3><p>Mobile Nutzer</p></div>
                 </div>
-                
-                <div class="analytics-chart">
-                    <h3>Besucher-Verlauf (7 Tage)</h3>
-                    <div class="chart-placeholder">
-                        <i class="fas fa-chart-line"></i>
-                        <p>Chart wird hier angezeigt</p>
-                    </div>
+                <div class="analytics-charts">
+                    <div class="chart-placeholder"><i class="fas fa-chart-area"></i><p>Chart wird geladen...</p></div>
                 </div>
             </div>
         `;
     }
     
-    bindMessageEvents() {
-        // Message events are bound inline in the HTML
-    }
-    
-    bindPageEditEvents() {
-        // Tab switching
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-        
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const targetTab = btn.dataset.tab;
-                
-                // Remove active from all tabs
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-                
-                // Add active to clicked tab
-                btn.classList.add('active');
-                document.getElementById(`${targetTab}-tab`).classList.add('active');
-            });
-        });
-        
-        // Auto-save functionality
-        const inputs = document.querySelectorAll('#adminContent input, #adminContent textarea');
-        inputs.forEach(input => {
-            input.addEventListener('change', () => {
-                this.autoSaveContent(input);
-            });
-        });
-    }
-    
-    autoSaveContent(input) {
-        const key = `admin_${input.id}`;
-        const value = input.value;
-        localStorage.setItem(key, value);
-        
-        // Show brief save indicator
-        const indicator = document.createElement('span');
-        indicator.className = 'save-indicator';
-        indicator.textContent = '✓ Gespeichert';
-        indicator.style.cssText = `
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--admin-success);
-            font-size: 0.8rem;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        `;
-        
-        input.parentElement.style.position = 'relative';
-        input.parentElement.appendChild(indicator);
-        
-        setTimeout(() => {
-            indicator.style.opacity = '1';
-            setTimeout(() => {
-                indicator.style.opacity = '0';
-                setTimeout(() => indicator.remove(), 300);
-            }, 1000);
-        }, 100);
-    }
-    
-    bindUserEvents() {
-        // User events are bound inline in the HTML
-    }
-    
     // Message Management
-    loadMessages() {
-        // Load messages from localStorage or API
-        const savedMessages = localStorage.getItem('adminMessages');
-        if (savedMessages) {
-            this.messages = JSON.parse(savedMessages);
-        } else {
-            // Demo messages for testing
-            this.messages = [
-                {
-                    id: 1,
-                    name: 'Max Mustermann',
-                    email: 'max@beispiel.de',
-                    subject: 'Kollaboration',
-                    message: 'Hallo! Ich würde gerne mit eurem Team zusammenarbeiten. Ich bin Content Creator im Gaming-Bereich und habe eigene YouTube und Twitch Kanäle.',
-                    timestamp: new Date(Date.now() - 86400000).toLocaleString('de-DE'),
-                    read: false,
-                    priority: 'high'
-                },
-                {
-                    id: 2,
-                    name: 'Anna Schmidt', 
-                    email: 'anna@test.de',
-                    subject: 'Feedback',
-                    message: 'Eure Webseite sieht super aus! Besonders das PWA Design gefällt mir. Macht weiter so!',
-                    timestamp: new Date(Date.now() - 172800000).toLocaleString('de-DE'),
-                    read: true,
-                    priority: 'low'
-                },
-                {
-                    id: 3,
-                    name: 'Tom Weber',
-                    email: 'tom.weber@gmail.com', 
-                    subject: 'Projekt Idee',
-                    message: 'Hi! Ich habe eine Idee für ein neues Minecraft Plugin. Könnt ihr euch das mal anschauen? Wäre super wenn wir zusammenarbeiten könnten.',
-                    timestamp: new Date(Date.now() - 259200000).toLocaleString('de-DE'),
-                    read: false,
-                    priority: 'medium'
-                }
-            ];
-            this.saveMessages();
-        }
-        
-        // Listen for new messages from main website
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'newMessage') {
-                const data = JSON.parse(e.newValue || '{}');
-                if (data.message && Date.now() - data.timestamp < 5000) { // Nur neue Nachrichten (5 Sekunden)
-                    this.messages.push(data.message);
-                    this.saveMessages();
-                    this.showSuccess('Neue Nachricht erhalten!');
-                    
-                    // Update current view if on messages page
-                    if (this.currentPage === 'messages') {
-                        this.loadPageContent('messages');
-                    }
-                    
-                    // Update message count
-                    this.updateMessageCount();
-                }
-            }
-        });
-    }
-
-    saveMessages() {
-        localStorage.setItem('adminMessages', JSON.stringify(this.messages));
-        this.updateMessageCount();
-    }
-    
-    updateMessageCount() {
-        const badge = document.getElementById('messageCount');
-        if (badge) {
-            badge.textContent = this.messages.length;
-        }
-    }
-    
     replyToMessage(id) {
         const message = this.messages.find(m => m.id === id);
         if (message) {
-            // Mark as read when replying
             message.read = true;
             this.saveMessages();
             
-            // Create mailto link
             const subject = `Re: ${message.subject}`;
             const body = `Hallo ${message.name},\n\nvielen Dank für deine Nachricht!\n\n\n---\nUrsprüngliche Nachricht:\n${message.message}`;
             const mailtoLink = `mailto:${message.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -1141,7 +978,6 @@ class AdminPanel {
             window.open(mailtoLink);
             this.showSuccess('E-Mail Client geöffnet');
             
-            // Refresh view
             if (this.currentPage === 'messages') {
                 this.loadPageContent('messages');
             }
@@ -1184,7 +1020,7 @@ class AdminPanel {
             this.showSuccess(`${readCount} gelesene Nachricht(en) gelöscht`);
         }
     }
-    
+
     deleteMessage(id) {
         if (confirm('Nachricht wirklich löschen?')) {
             this.messages = this.messages.filter(m => m.id !== id);
@@ -1194,25 +1030,132 @@ class AdminPanel {
         }
     }
     
-    // Page Content Management
-    savePageContent(page) {
-        this.showLoading();
+    getNotificationsHTML() {
+        return `
+            <div class="page-content">
+                <div class="page-header">
+                    <h1><i class="fas fa-bell"></i> Benachrichtigungen</h1>
+                    <p>System- und Team-Benachrichtigungen</p>
+                </div>
+                <div class="notifications-list">
+                    <div class="notification-item"><i class="fas fa-info-circle"></i> Systemupdate erfolgreich installiert.</div>
+                    <div class="notification-item"><i class="fas fa-user-plus"></i> Neuer Benutzer hinzugefügt.</div>
+                    <div class="notification-item"><i class="fas fa-envelope"></i> Neue Nachricht im Kontaktformular.</div>
+                </div>
+            </div>
+        `;
+    }
+
+    getBackupHTML() {
+        return `
+            <div class="page-content">
+                <div class="page-header">
+                    <h1><i class="fas fa-cloud-download-alt"></i> Backup & Restore</h1>
+                    <p>Exportiere oder importiere deine Admin-Daten</p>
+                </div>
+                <div class="backup-actions">
+                    <button onclick="adminPanel.exportBackup()"><i class="fas fa-download"></i> Backup Exportieren</button>
+                    <button onclick="adminPanel.importBackup()"><i class="fas fa-upload"></i> Backup Importieren</button>
+                </div>
+                <input type="file" id="backupFileInput" style="display:none;" accept="application/json">
+            </div>
+        `;
+    }
+
+    exportBackup() {
+        logDebug('ADMIN_PANEL', 'Backup Export gestartet');
         
-        // Simulate API call
-        setTimeout(() => {
-            this.hideLoading();
-            this.showSuccess('Änderungen gespeichert!');
+        try {
+            const data = {
+                timestamp: new Date().toISOString(),
+                version: '1.0',
+                messages: JSON.parse(localStorage.getItem('adminMessages') || '[]'),
+                users: this.users.map(u => ({ ...u, password: '***REDACTED***' })), // Passwörter nicht exportieren
+                projects: JSON.parse(localStorage.getItem('adminProjects') || '[]'),
+                media: JSON.parse(localStorage.getItem('adminMedia') || '[]')
+            };
             
-            // Here you would normally send the data to your backend
-            console.log(`Saving ${page} content...`);
-        }, 1000);
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `klehausen-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            logSuccess('ADMIN_PANEL', 'Backup erfolgreich exportiert');
+            this.showSuccess('Backup exportiert!');
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Backup Export', error);
+            this.showError('Fehler beim Exportieren des Backups');
+        }
     }
-    
-    previewChanges() {
-        window.open('../index.html', '_blank');
+
+    importBackup() {
+        logDebug('ADMIN_PANEL', 'Backup Import gestartet');
+        
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) {
+                logDebug('ADMIN_PANEL', 'Import abgebrochen - keine Datei ausgewählt');
+                return;
+            }
+            
+            logInfo('ADMIN_PANEL', `Backup-Datei ausgewählt: ${file.name} (${Math.round(file.size/1024)}KB)`);
+            
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    
+                    // Validierung der Backup-Struktur
+                    if (!data || typeof data !== 'object') {
+                        throw new Error('Ungültige Backup-Struktur');
+                    }
+                    
+                    if (confirm(`Backup importieren?\n\nDies überschreibt alle aktuellen Daten.\nBackup-Datum: ${data.timestamp || 'Unbekannt'}`)) {
+                        let importedItems = 0;
+                        
+                        if (data.messages && Array.isArray(data.messages)) {
+                            localStorage.setItem('adminMessages', JSON.stringify(data.messages));
+                            importedItems++;
+                            logInfo('ADMIN_PANEL', `${data.messages.length} Nachrichten importiert`);
+                        }
+                        
+                        if (data.projects && Array.isArray(data.projects)) {
+                            localStorage.setItem('adminProjects', JSON.stringify(data.projects));
+                            importedItems++;
+                            logInfo('ADMIN_PANEL', `${data.projects.length} Projekte importiert`);
+                        }
+                        
+                        if (data.media && Array.isArray(data.media)) {
+                            localStorage.setItem('adminMedia', JSON.stringify(data.media));
+                            importedItems++;
+                            logInfo('ADMIN_PANEL', `${data.media.length} Medien-Dateien importiert`);
+                        }
+                        
+                        logSuccess('ADMIN_PANEL', `Backup erfolgreich importiert (${importedItems} Kategorien)`);
+                        this.showSuccess('Backup importiert!');
+                        this.loadPageContent('overview');
+                    } else {
+                        logDebug('ADMIN_PANEL', 'Backup Import abgebrochen');
+                    }
+                } catch (error) {
+                    logError('ADMIN_PANEL', 'Fehler beim Backup Import', error);
+                    this.showError('Ungültige Backup-Datei!');
+                }
+            };
+            reader.onerror = () => {
+                logError('ADMIN_PANEL', 'Fehler beim Lesen der Backup-Datei');
+                this.showError('Fehler beim Lesen der Datei');
+            };
+            reader.readAsText(file);
+        };
+        input.click();
     }
-    
-    // User Management
     editUser(id) {
         const user = this.users.find(u => u.id === id);
         if (user) {
@@ -1257,31 +1200,116 @@ class AdminPanel {
         }
     }
     
+    // Page Content Management
+    savePageContent(page) {
+        this.showLoading();
+        
+        // Sammle alle Eingabewerte
+        const content = {};
+        
+        if (page === 'home') {
+            content.heroTitle = document.getElementById('hero-title')?.value || '';
+            content.heroDescription = document.getElementById('hero-description')?.value || '';
+            content.discordLink = document.getElementById('discord-link')?.value || '';
+        } else if (page === 'projects') {
+            content.projectsTitle = document.getElementById('projects-title')?.value || '';
+            content.projectsDescription = document.getElementById('projects-description')?.value || '';
+        }
+        
+        // Speichere in localStorage
+        localStorage.setItem(`pageContent_${page}`, JSON.stringify(content));
+        
+        setTimeout(() => {
+            this.hideLoading();
+            this.showSuccess('Änderungen gespeichert!');
+            console.log(`Saving ${page} content:`, content);
+        }, 1000);
+    }
+    
+    loadSavedPageContent(page) {
+        // Lade gespeicherte Inhalte
+        const savedContent = localStorage.getItem(`pageContent_${page}`);
+        if (savedContent) {
+            const content = JSON.parse(savedContent);
+            
+            setTimeout(() => {
+                if (page === 'home') {
+                    const heroTitle = document.getElementById('hero-title');
+                    const heroDesc = document.getElementById('hero-description');
+                    const discordLink = document.getElementById('discord-link');
+                    
+                    if (heroTitle) heroTitle.value = content.heroTitle || '';
+                    if (heroDesc) heroDesc.value = content.heroDescription || '';
+                    if (discordLink) discordLink.value = content.discordLink || '';
+                } else if (page === 'projects') {
+                    const projectsTitle = document.getElementById('projects-title');
+                    const projectsDesc = document.getElementById('projects-description');
+                    
+                    if (projectsTitle) projectsTitle.value = content.projectsTitle || '';
+                    if (projectsDesc) projectsDesc.value = content.projectsDescription || '';
+                }
+            }, 100);
+        }
+    }
+    
+    previewChanges() {
+        window.open('../index.html', '_blank');
+    }
+    
+    // Event Binding
+    bindMessageEvents() {
+        // Messages are already bound via onclick
+    }
+    
+    bindUserEvents() {
+        // Users are already bound via onclick
+    }
+    
+    bindPageEditEvents() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.dataset.tab;
+                
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                const targetContent = document.getElementById(`${targetTab}-tab`);
+                if (targetContent) targetContent.classList.add('active');
+            });
+        });
+    }
+    
     // UI Helper Methods
     showLoading() {
-        document.getElementById('loadingOverlay').classList.add('show');
+        const loading = document.getElementById('loadingOverlay');
+        if (loading) loading.classList.add('show');
     }
     
     hideLoading() {
-        document.getElementById('loadingOverlay').classList.remove('show');
+        const loading = document.getElementById('loadingOverlay');
+        if (loading) loading.classList.remove('show');
     }
     
     showToast(message, type = 'success') {
         const toast = document.getElementById('toast');
+        if (!toast) return;
+        
         const icon = toast.querySelector('.toast-icon');
         const messageSpan = toast.querySelector('.toast-message');
         
-        // Set icon based on type
         const icons = {
             success: 'fas fa-check-circle',
             error: 'fas fa-exclamation-circle',
             warning: 'fas fa-exclamation-triangle'
         };
         
-        icon.className = `toast-icon ${icons[type]}`;
-        messageSpan.textContent = message;
+        if (icon) icon.className = `toast-icon ${icons[type]}`;
+        if (messageSpan) messageSpan.textContent = message;
         
-        // Reset classes and add new ones
         toast.className = `toast ${type}`;
         toast.classList.add('show');
         
@@ -1306,7 +1334,7 @@ class AdminPanel {
 // Initialize Admin Panel
 const adminPanel = new AdminPanel();
 
-// Add message from contact form (to be called from main website)
+// Global function for contact form messages
 window.addContactMessage = function(messageData) {
     const newMessage = {
         id: Math.max(...adminPanel.messages.map(m => m.id), 0) + 1,
@@ -1314,7 +1342,9 @@ window.addContactMessage = function(messageData) {
         email: messageData.email,
         subject: messageData.subject,
         message: messageData.message,
-        timestamp: new Date().toLocaleString('de-DE')
+        timestamp: new Date().toLocaleString('de-DE'),
+        read: false,
+        priority: messageData.priority || 'low'
     };
     
     adminPanel.messages.push(newMessage);

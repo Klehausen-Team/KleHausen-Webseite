@@ -1,4 +1,13 @@
-// Admin Panel JavaScript - Vollständig funktionsfähig mit Logging
+// @ts-nocheck
+/* eslint-env browser */
+/* global logInfo, logError, logDebug, logSuccess, logWarn */
+
+/**
+ * Admin Panel JavaScript - Vollständig funktionsfähig mit Logging
+ * @file admin-script.js
+ * @version 1.0.0
+ */
+
 class AdminPanel {
     constructor() {
         this.currentUser = null;
@@ -293,56 +302,91 @@ class AdminPanel {
     }
     
     navigateToPage(page) {
-        // Update active menu item
-        document.querySelectorAll('.menu-link').forEach(link => {
-            link.classList.remove('active');
-        });
+        logDebug('ADMIN_PANEL', `Navigation zu Seite: ${page}`);
         
-        const activeLink = document.querySelector(`[data-page="${page}"]`);
-        if (activeLink) activeLink.classList.add('active');
-        
-        this.currentPage = page;
-        this.loadPageContent(page);
+        try {
+            // Update active menu item
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            const activeLink = document.querySelector(`[data-page="${page}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+                logDebug('ADMIN_PANEL', `Menu-Link aktiviert für: ${page}`);
+            } else {
+                logWarn('ADMIN_PANEL', `Kein Menu-Link gefunden für Seite: ${page}`);
+            }
+            
+            this.currentPage = page;
+            this.loadPageContent(page);
+            
+            logSuccess('ADMIN_PANEL', `Navigation erfolgreich zu: ${page}`);
+        } catch (error) {
+            logError('ADMIN_PANEL', `Fehler bei Navigation zu ${page}`, error);
+        }
     }
     
     loadPageContent(page) {
-        const contentDiv = document.getElementById('adminContent');
-        if (!contentDiv) return;
+        logDebug('ADMIN_PANEL', `Lade Content für Seite: ${page}`);
         
-        switch(page) {
-            case 'overview':
-                contentDiv.innerHTML = this.getOverviewHTML();
-                break;
-            case 'messages':
-                contentDiv.innerHTML = this.getMessagesHTML();
-                this.bindMessageEvents();
-                break;
-            case 'pages':
-                contentDiv.innerHTML = this.getPagesHTML();
-                this.bindPageEditEvents();
-                this.loadSavedPageContent('home'); // Lade gespeicherte Inhalte
-                break;
-            case 'projects':
-                contentDiv.innerHTML = this.getProjectsHTML();
-                break;
-            case 'users':
-                contentDiv.innerHTML = this.getUsersHTML();
-                this.bindUserEvents();
-                break;
-            case 'media':
-                contentDiv.innerHTML = this.getMediaHTML();
-                break;
-            case 'analytics':
-                contentDiv.innerHTML = this.getAnalyticsHTML();
-                break;
-            case 'notifications':
-                contentDiv.innerHTML = this.getNotificationsHTML();
-                break;
-            case 'backup':
-                contentDiv.innerHTML = this.getBackupHTML();
-                break;
-            default:
-                contentDiv.innerHTML = '<div class="page-content"><h1>Seite nicht gefunden</h1></div>';
+        const contentDiv = document.getElementById('adminContent');
+        if (!contentDiv) {
+            logError('ADMIN_PANEL', 'adminContent Element nicht gefunden');
+            return;
+        }
+        
+        try {
+            switch(page) {
+                case 'overview':
+                    contentDiv.innerHTML = this.getOverviewHTML();
+                    logInfo('ADMIN_PANEL', 'Overview-Content geladen');
+                    break;
+                case 'messages':
+                    contentDiv.innerHTML = this.getMessagesHTML();
+                    this.bindMessageEvents();
+                    logInfo('ADMIN_PANEL', 'Messages-Content geladen');
+                    break;
+                case 'pages':
+                    contentDiv.innerHTML = this.getPagesHTML();
+                    this.bindPageEditEvents();
+                    this.loadSavedPageContent('home'); // Lade gespeicherte Inhalte
+                    logInfo('ADMIN_PANEL', 'Pages-Content geladen');
+                    break;
+                case 'projects':
+                    contentDiv.innerHTML = this.getProjectsHTML();
+                    logInfo('ADMIN_PANEL', 'Projects-Content geladen');
+                    break;
+                case 'users':
+                    contentDiv.innerHTML = this.getUsersHTML();
+                    this.bindUserEvents();
+                    logInfo('ADMIN_PANEL', 'Users-Content geladen');
+                    break;
+                case 'media':
+                    contentDiv.innerHTML = this.getMediaHTML();
+                    logInfo('ADMIN_PANEL', 'Media-Content geladen');
+                    break;
+                case 'analytics':
+                    contentDiv.innerHTML = this.getAnalyticsHTML();
+                    logInfo('ADMIN_PANEL', 'Analytics-Content geladen');
+                    break;
+                case 'notifications':
+                    contentDiv.innerHTML = this.getNotificationsHTML();
+                    logInfo('ADMIN_PANEL', 'Notifications-Content geladen');
+                    break;
+                case 'backup':
+                    contentDiv.innerHTML = this.getBackupHTML();
+                    logInfo('ADMIN_PANEL', 'Backup-Content geladen');
+                    break;
+                default:
+                    logWarn('ADMIN_PANEL', `Unbekannte Seite angefordert: ${page}`);
+                    contentDiv.innerHTML = '<div class="error-message">Seite nicht gefunden</div>';
+            }
+            
+            logSuccess('ADMIN_PANEL', `Content erfolgreich geladen für: ${page}`);
+        } catch (error) {
+            logError('ADMIN_PANEL', `Fehler beim Laden des Contents für ${page}`, error);
+            contentDiv.innerHTML = '<div class="error-message">Fehler beim Laden der Seite</div>';
         }
     }
     

@@ -1,3 +1,15 @@
 {
-    "liveServer.settings.port": 5501
+    "liveServer.settings.port": 5501,
+    "typescript.validate.enable": true,
+    "javascript.validate.enable": true,
+    "typescript.check.npmIsInstalled": false,
+    "js/ts.implicitProjectConfig.checkJs": false,
+    "typescript.preferences.includePackageJsonAutoImports": "off",
+    "eslint.enable": true,
+    "eslint.workingDirectories": [
+        {
+            "directory": "./admin",
+            "changeProcessCwd": true
+        }
+    ]
 }
