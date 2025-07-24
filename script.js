@@ -363,6 +363,13 @@ if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        // Show loading state
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Wird gesendet...';
+        submitBtn.disabled = true;
+        
         // Get form data
         const formData = new FormData(this);
         const data = {};
@@ -370,40 +377,95 @@ if (contactForm) {
             data[key] = value;
         });
         
-        // Sende Nachricht an Admin Panel (nur wenn PWA)
-        if (window.matchMedia('(display-mode: standalone)').matches || 
-            window.navigator.standalone === true) {
-            
+        // Validate form data
+        if (!data.name || !data.email || !data.subject || !data.message) {
+            showNotification('Bitte fülle alle Pflichtfelder aus!', 'error');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            return;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(data.email)) {
+            showNotification('Bitte gib eine gültige E-Mail-Adresse ein!', 'error');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            return;
+        }
+        
+        // Simulate sending delay
+        setTimeout(() => {
             // Speichere Nachricht für Admin Panel
             const adminMessages = JSON.parse(localStorage.getItem('adminMessages') || '[]');
             const newMessage = {
                 id: Math.max(...adminMessages.map(m => m.id), 0) + 1,
                 name: data.name,
                 email: data.email,
-                subject: data.subject,
+                subject: getSubjectText(data.subject),
                 message: data.message,
-                timestamp: new Date().toLocaleString('de-DE')
+                timestamp: new Date().toLocaleString('de-DE'),
+                read: false,
+                priority: getPriority(data.subject)
             };
             
             adminMessages.push(newMessage);
             localStorage.setItem('adminMessages', JSON.stringify(adminMessages));
             
-            // Admin Panel benachrichtigen falls geöffnet
+            // Versuche Admin Panel zu benachrichtigen
             try {
                 if (window.addContactMessage) {
                     window.addContactMessage(newMessage);
+                } else {
+                    // Broadcast an alle Tabs mit Admin Panel
+                    localStorage.setItem('newMessage', JSON.stringify({
+                        timestamp: Date.now(),
+                        message: newMessage
+                    }));
                 }
             } catch (error) {
-                console.log('Admin Panel nicht verfügbar');
+                console.log('Admin Panel Kommunikation fehlgeschlagen:', error);
             }
-        }
-        
-        // Show success message
-        showNotification('Nachricht wurde erfolgreich gesendet! Wir melden uns bald bei dir.', 'success');
-        
-        // Reset form
-        this.reset();
+            
+            // Show success message
+            showNotification(`Vielen Dank ${data.name}! Deine Nachricht wurde erfolgreich gesendet. Wir melden uns bald bei dir zurück!`, 'success');
+            
+            // Reset form and button
+            this.reset();
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            
+            // Google Analytics Event (falls verfügbar)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'form_submit', {
+                    event_category: 'Contact',
+                    event_label: data.subject
+                });
+            }
+            
+        }, 1500); // 1.5 Sekunden Delay für realistisches Senden
     });
+}
+
+// Helper functions for contact form
+function getSubjectText(value) {
+    const subjects = {
+        'collaboration': 'Kollaboration',
+        'project-idea': 'Projekt Idee',
+        'feedback': 'Feedback',
+        'other': 'Sonstiges'
+    };
+    return subjects[value] || value;
+}
+
+function getPriority(subject) {
+    const priorities = {
+        'collaboration': 'high',
+        'project-idea': 'medium',
+        'feedback': 'low',
+        'other': 'low'
+    };
+    return priorities[subject] || 'low';
 }
 
 // Notification system

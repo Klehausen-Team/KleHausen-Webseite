@@ -898,12 +898,62 @@ body {
 }
 
 /* Messages */
+.messages-container {
+    max-width: 100%;
+}
+
+.messages-toolbar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-mark-all-read,
+.btn-clear-read {
+    background: var(--admin-surface-light);
+    color: var(--admin-text);
+    border: 1px solid var(--admin-border);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.btn-mark-all-read:hover:not(:disabled),
+.btn-clear-read:hover {
+    background: var(--admin-primary);
+    border-color: var(--admin-primary);
+    transform: translateY(-1px);
+}
+
+.btn-mark-all-read:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .message-item {
     background: var(--admin-surface-light);
     border: 1px solid var(--admin-border);
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.message-item.unread {
+    border-left: 4px solid var(--admin-primary);
+    background: linear-gradient(135deg, var(--admin-surface-light) 0%, rgba(255, 123, 0, 0.05) 100%);
+}
+
+.message-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--admin-shadow);
 }
 
 .message-header {
@@ -915,35 +965,128 @@ body {
     gap: 1rem;
 }
 
-.message-sender strong {
+.message-sender {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--admin-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.sender-info strong {
     color: var(--admin-text);
     font-size: 1.1rem;
+    display: block;
+    margin-bottom: 0.2rem;
 }
 
 .message-email {
     color: var(--admin-text-muted);
     font-size: 0.9rem;
-    margin-left: 0.5rem;
 }
 
 .message-meta {
     text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
 }
 
-.message-subject {
-    background: var(--admin-primary);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
+.message-priority {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
     font-size: 0.8rem;
-    display: inline-block;
-    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+.message-priority.priority-high {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.message-priority.priority-medium {
+    background: rgba(243, 156, 18, 0.2);
+    color: #f39c12;
+    border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.message-priority.priority-low {
+    background: rgba(149, 165, 166, 0.2);
+    color: #95a5a6;
+    border: 1px solid rgba(149, 165, 166, 0.3);
 }
 
 .message-time {
     color: var(--admin-text-muted);
     font-size: 0.8rem;
+}
+
+.unread-badge {
+    background: var(--admin-primary);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    animation: adminPulse 2s ease-in-out infinite alternate;
+}
+
+.header-stats {
+    display: flex;
+    gap: 1rem;
+}
+
+.stat-badge {
+    text-align: center;
+    padding: 0.5rem 1rem;
+    background: var(--admin-surface-light);
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+}
+
+.stat-badge.unread {
+    background: rgba(255, 123, 0, 0.1);
+    border-color: var(--admin-primary);
+}
+
+.stat-badge .stat-number {
     display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--admin-primary);
+}
+
+.stat-badge .stat-label {
+    font-size: 0.8rem;
+    color: var(--admin-text-muted);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-info h1 {
+    margin-bottom: 0.5rem;
 }
 
 .message-content {
@@ -964,9 +1107,12 @@ body {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
-.btn-reply, .btn-delete {
+.btn-reply, 
+.btn-delete, 
+.btn-mark-read {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 6px;
@@ -976,6 +1122,69 @@ body {
     align-items: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-mark-read {
+    background: var(--admin-success);
+    color: white;
+}
+
+.btn-mark-read:hover {
+    background: #219a52;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+}
+
+.btn-reply {
+    background: var(--admin-primary);
+    color: white;
+}
+
+.btn-reply:hover {
+    background: var(--admin-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 123, 0, 0.3);
+}
+
+.btn-delete {
+    background: var(--admin-danger);
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+/* No Messages State */
+.no-messages {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--admin-text-muted);
+}
+
+.no-messages i {
+    font-size: 4rem;
+    color: var(--admin-border);
+    margin-bottom: 1rem;
+}
+
+.no-messages h3 {
+    color: var(--admin-text);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.no-messages p {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.no-messages .hint {
+    font-style: italic;
+    color: var(--admin-primary);
 }
 
 .btn-reply {
