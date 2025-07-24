@@ -105,7 +105,8 @@
     </div>
 
     <!-- Admin Dashboard -->
-    <div class="admin-dashboard" id="adminDashboard" style="display: none;">
+    <div class="admin-dashboard dashboard" id="adminDashboard" style="display: none;">
+        <div id="dashboard" class="dashboard-wrapper">
         <!-- Top Navigation -->
         <nav class="admin-nav">
             <div class="admin-nav-left">
@@ -143,7 +144,7 @@
         </nav>
 
         <!-- Sidebar -->
-        <aside class="admin-sidebar" id="adminSidebar">
+        <aside class="admin-sidebar sidebar" id="adminSidebar">
             <div class="sidebar-menu">
                 <div class="menu-section">
                     <h3>Dashboard</h3>
@@ -234,11 +235,12 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="admin-main" id="adminMain">
+        <main class="admin-main main-content" id="adminMain">
             <div class="admin-content" id="adminContent">
                 <!-- Content wird hier dynamisch geladen -->
             </div>
         </main>
+        </div> <!-- End dashboard wrapper -->
     </div>
 
     <!-- Loading Overlay -->
@@ -258,6 +260,8 @@
     </div>
 
     <script src="../js/logger.js"></script>
+    <script src="../js/system-monitor.js"></script>
+    <script src="../js/debug-dashboard.js"></script>
     <script src="admin-script.js"></script>
 </body>
 </html>

@@ -29,7 +29,8 @@ body {
 }
 
 /* Admin Splash Screen */
-.admin-splash {
+.admin-splash,
+.splash-screen {
     position: fixed;
     top: 0;
     left: 0;
@@ -43,7 +44,8 @@ body {
     transition: opacity 0.5s ease;
 }
 
-.admin-splash.fade-out {
+.admin-splash.fade-out,
+.splash-screen.fade-out {
     opacity: 0;
     pointer-events: none;
 }
@@ -348,7 +350,8 @@ body {
 }
 
 /* Admin Dashboard */
-.admin-dashboard {
+.admin-dashboard,
+.dashboard {
     display: grid;
     grid-template-areas: 
         "nav nav"
@@ -562,14 +565,16 @@ body {
 }
 
 /* Admin Main Content */
-.admin-main {
+.admin-main,
+.main-content {
     grid-area: main;
     background: var(--admin-background);
     overflow-y: auto;
     padding: 2rem;
 }
 
-.admin-content {
+.admin-content,
+.content-area {
     max-width: 1200px;
     margin: 0 auto;
 }

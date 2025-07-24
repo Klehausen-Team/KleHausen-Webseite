@@ -644,41 +644,127 @@ class AdminPanel {
     }
 
     addProject() {
-        const name = prompt('Projektname:');
-        if (!name) return;
-        const desc = prompt('Beschreibung:');
-        const status = prompt('Status (z.B. Aktiv in Entwicklung, Pausiert):', 'Aktiv in Entwicklung');
-        const icon = prompt('FontAwesome Icon-Klasse:', 'fas fa-rocket');
-        let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
-        const id = projects.length > 0 ? Math.max(...projects.map(p => p.id)) + 1 : 1;
-        projects.push({id, name, desc, status, icon});
-        localStorage.setItem('adminProjects', JSON.stringify(projects));
-        this.showSuccess('Projekt hinzugefügt!');
-        this.loadPageContent('projects');
+        logDebug('ADMIN_PANEL', 'Add Project Dialog geöffnet');
+        
+        try {
+            const name = prompt('Projektname:');
+            if (!name || name.trim() === '') {
+                logDebug('ADMIN_PANEL', 'Add Project abgebrochen - kein Name eingegeben');
+                return;
+            }
+            
+            const desc = prompt('Beschreibung:');
+            if (!desc || desc.trim() === '') {
+                logWarn('ADMIN_PANEL', 'Projekt ohne Beschreibung erstellt');
+            }
+            
+            const status = prompt('Status (z.B. Aktiv in Entwicklung, Pausiert):', 'Aktiv in Entwicklung');
+            const icon = prompt('FontAwesome Icon-Klasse:', 'fas fa-rocket');
+            
+            let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+            const id = projects.length > 0 ? Math.max(...projects.map(p => p.id)) + 1 : 1;
+            
+            const newProject = {
+                id, 
+                name: name.trim(), 
+                desc: desc ? desc.trim() : '', 
+                status: status || 'Aktiv in Entwicklung', 
+                icon: icon || 'fas fa-rocket',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            projects.push(newProject);
+            localStorage.setItem('adminProjects', JSON.stringify(projects));
+            
+            logSuccess('ADMIN_PANEL', `Neues Projekt erstellt: ${name}`);
+            this.showSuccess('Projekt hinzugefügt!');
+            this.loadPageContent('projects');
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Hinzufügen des Projekts', error);
+            this.showError('Fehler beim Hinzufügen des Projekts');
+        }
     }
 
     editProject(id) {
-        let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
-        const idx = projects.findIndex(p => p.id === id);
-        if (idx === -1) return;
-        const p = projects[idx];
-        const name = prompt('Projektname:', p.name);
-        const desc = prompt('Beschreibung:', p.desc);
-        const status = prompt('Status:', p.status);
-        const icon = prompt('FontAwesome Icon-Klasse:', p.icon);
-        projects[idx] = {...p, name, desc, status, icon};
-        localStorage.setItem('adminProjects', JSON.stringify(projects));
-        this.showSuccess('Projekt aktualisiert!');
-        this.loadPageContent('projects');
+        logDebug('ADMIN_PANEL', `Edit Project Dialog geöffnet für ID: ${id}`);
+        
+        try {
+            let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+            const idx = projects.findIndex(p => p.id === id);
+            
+            if (idx === -1) {
+                logError('ADMIN_PANEL', `Projekt nicht gefunden: ID ${id}`);
+                this.showError('Projekt nicht gefunden');
+                return;
+            }
+            
+            const p = projects[idx];
+            logInfo('ADMIN_PANEL', `Bearbeite Projekt: ${p.name}`);
+            
+            const name = prompt('Projektname:', p.name);
+            if (name === null) {
+                logDebug('ADMIN_PANEL', 'Edit Project abgebrochen');
+                return;
+            }
+            
+            if (name.trim() === '') {
+                logWarn('ADMIN_PANEL', 'Leerer Projektname eingegeben');
+                this.showError('Projektname darf nicht leer sein');
+                return;
+            }
+            
+            const desc = prompt('Beschreibung:', p.desc);
+            const status = prompt('Status:', p.status);
+            const icon = prompt('FontAwesome Icon-Klasse:', p.icon);
+            
+            const updatedProject = {
+                ...p, 
+                name: name.trim(), 
+                desc: desc ? desc.trim() : p.desc, 
+                status: status || p.status, 
+                icon: icon || p.icon,
+                updatedAt: new Date().toISOString()
+            };
+            
+            projects[idx] = updatedProject;
+            localStorage.setItem('adminProjects', JSON.stringify(projects));
+            
+            logSuccess('ADMIN_PANEL', `Projekt aktualisiert: ${name}`);
+            this.showSuccess('Projekt aktualisiert!');
+            this.loadPageContent('projects');
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Bearbeiten des Projekts', error);
+            this.showError('Fehler beim Bearbeiten des Projekts');
+        }
     }
 
     deleteProject(id) {
-        let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
-        if (confirm('Projekt wirklich löschen?')) {
-            projects = projects.filter(p => p.id !== id);
-            localStorage.setItem('adminProjects', JSON.stringify(projects));
-            this.showSuccess('Projekt gelöscht!');
-            this.loadPageContent('projects');
+        logDebug('ADMIN_PANEL', `Delete Project angefordert für ID: ${id}`);
+        
+        try {
+            let projects = JSON.parse(localStorage.getItem('adminProjects') || '[]');
+            const project = projects.find(p => p.id === id);
+            
+            if (!project) {
+                logError('ADMIN_PANEL', `Projekt nicht gefunden: ID ${id}`);
+                this.showError('Projekt nicht gefunden');
+                return;
+            }
+            
+            if (confirm(`Projekt "${project.name}" wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden.`)) {
+                projects = projects.filter(p => p.id !== id);
+                localStorage.setItem('adminProjects', JSON.stringify(projects));
+                
+                logSuccess('ADMIN_PANEL', `Projekt gelöscht: ${project.name}`);
+                this.showSuccess('Projekt gelöscht!');
+                this.loadPageContent('projects');
+            } else {
+                logDebug('ADMIN_PANEL', `Löschvorgang abgebrochen für Projekt: ${project.name}`);
+            }
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Löschen des Projekts', error);
+            this.showError('Fehler beim Löschen des Projekts');
         }
     }
     
@@ -752,25 +838,42 @@ class AdminPanel {
     }
 
     uploadMedia() {
+        logDebug('ADMIN_PANEL', 'Media Upload gestartet');
+        
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*,video/*';
         input.multiple = true;
         input.onchange = (e) => {
             const files = Array.from(e.target.files);
+            logInfo('ADMIN_PANEL', `${files.length} Dateien für Upload ausgewählt`);
+            
             files.forEach(file => {
+                logDebug('ADMIN_PANEL', `Verarbeite Datei: ${file.name} (${Math.round(file.size/1024)}KB)`);
+                
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                    const media = JSON.parse(localStorage.getItem('adminMedia') || '[]');
-                    media.push({
-                        name: file.name,
-                        size: Math.round(file.size/1024),
-                        type: file.type,
-                        data: ev.target.result
-                    });
-                    localStorage.setItem('adminMedia', JSON.stringify(media));
-                    this.showSuccess('Datei hochgeladen!');
-                    this.loadPageContent('media');
+                    try {
+                        const media = JSON.parse(localStorage.getItem('adminMedia') || '[]');
+                        media.push({
+                            name: file.name,
+                            size: Math.round(file.size/1024),
+                            type: file.type,
+                            data: ev.target.result,
+                            uploadedAt: new Date().toISOString()
+                        });
+                        localStorage.setItem('adminMedia', JSON.stringify(media));
+                        logSuccess('ADMIN_PANEL', `Datei erfolgreich hochgeladen: ${file.name}`);
+                        this.showSuccess('Datei hochgeladen!');
+                        this.loadPageContent('media');
+                    } catch (error) {
+                        logError('ADMIN_PANEL', 'Fehler beim Speichern der Datei', error);
+                        this.showError('Fehler beim Hochladen der Datei');
+                    }
+                };
+                reader.onerror = () => {
+                    logError('ADMIN_PANEL', `Fehler beim Lesen der Datei: ${file.name}`);
+                    this.showError(`Fehler beim Lesen der Datei: ${file.name}`);
                 };
                 reader.readAsDataURL(file);
             });
@@ -779,12 +882,30 @@ class AdminPanel {
     }
 
     deleteMedia(idx) {
-        const media = JSON.parse(localStorage.getItem('adminMedia') || '[]');
-        if (media[idx] && confirm('Datei wirklich löschen?')) {
-            media.splice(idx, 1);
-            localStorage.setItem('adminMedia', JSON.stringify(media));
-            this.showSuccess('Datei gelöscht!');
-            this.loadPageContent('media');
+        logDebug('ADMIN_PANEL', `Media Delete angefordert für Index: ${idx}`);
+        
+        try {
+            const media = JSON.parse(localStorage.getItem('adminMedia') || '[]');
+            
+            if (media[idx]) {
+                const fileName = media[idx].name;
+                
+                if (confirm(`Datei "${fileName}" wirklich löschen?`)) {
+                    media.splice(idx, 1);
+                    localStorage.setItem('adminMedia', JSON.stringify(media));
+                    logSuccess('ADMIN_PANEL', `Datei gelöscht: ${fileName}`);
+                    this.showSuccess('Datei gelöscht!');
+                    this.loadPageContent('media');
+                } else {
+                    logDebug('ADMIN_PANEL', `Löschvorgang abgebrochen für: ${fileName}`);
+                }
+            } else {
+                logError('ADMIN_PANEL', `Ungültiger Media-Index: ${idx}`);
+                this.showError('Datei nicht gefunden');
+            }
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Löschen der Datei', error);
+            this.showError('Fehler beim Löschen der Datei');
         }
     }
     
@@ -907,39 +1028,94 @@ class AdminPanel {
     }
 
     exportBackup() {
-        const data = {
-            messages: JSON.parse(localStorage.getItem('adminMessages') || '[]'),
-            users: this.users,
-            projects: JSON.parse(localStorage.getItem('adminProjects') || '[]'),
-            media: JSON.parse(localStorage.getItem('adminMedia') || '[]')
-        };
-        const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'klehausen-backup.json';
-        a.click();
-        URL.revokeObjectURL(url);
-        this.showSuccess('Backup exportiert!');
+        logDebug('ADMIN_PANEL', 'Backup Export gestartet');
+        
+        try {
+            const data = {
+                timestamp: new Date().toISOString(),
+                version: '1.0',
+                messages: JSON.parse(localStorage.getItem('adminMessages') || '[]'),
+                users: this.users.map(u => ({ ...u, password: '***REDACTED***' })), // Passwörter nicht exportieren
+                projects: JSON.parse(localStorage.getItem('adminProjects') || '[]'),
+                media: JSON.parse(localStorage.getItem('adminMedia') || '[]')
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `klehausen-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            logSuccess('ADMIN_PANEL', 'Backup erfolgreich exportiert');
+            this.showSuccess('Backup exportiert!');
+        } catch (error) {
+            logError('ADMIN_PANEL', 'Fehler beim Backup Export', error);
+            this.showError('Fehler beim Exportieren des Backups');
+        }
     }
 
     importBackup() {
-        const input = document.getElementById('backupFileInput');
+        logDebug('ADMIN_PANEL', 'Backup Import gestartet');
+        
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
         input.onchange = (e) => {
             const file = e.target.files[0];
-            if (!file) return;
+            if (!file) {
+                logDebug('ADMIN_PANEL', 'Import abgebrochen - keine Datei ausgewählt');
+                return;
+            }
+            
+            logInfo('ADMIN_PANEL', `Backup-Datei ausgewählt: ${file.name} (${Math.round(file.size/1024)}KB)`);
+            
             const reader = new FileReader();
             reader.onload = (ev) => {
                 try {
                     const data = JSON.parse(ev.target.result);
-                    if (data.messages) localStorage.setItem('adminMessages', JSON.stringify(data.messages));
-                    if (data.projects) localStorage.setItem('adminProjects', JSON.stringify(data.projects));
-                    if (data.media) localStorage.setItem('adminMedia', JSON.stringify(data.media));
-                    this.showSuccess('Backup importiert!');
-                    this.loadPageContent('overview');
-                } catch {
+                    
+                    // Validierung der Backup-Struktur
+                    if (!data || typeof data !== 'object') {
+                        throw new Error('Ungültige Backup-Struktur');
+                    }
+                    
+                    if (confirm(`Backup importieren?\n\nDies überschreibt alle aktuellen Daten.\nBackup-Datum: ${data.timestamp || 'Unbekannt'}`)) {
+                        let importedItems = 0;
+                        
+                        if (data.messages && Array.isArray(data.messages)) {
+                            localStorage.setItem('adminMessages', JSON.stringify(data.messages));
+                            importedItems++;
+                            logInfo('ADMIN_PANEL', `${data.messages.length} Nachrichten importiert`);
+                        }
+                        
+                        if (data.projects && Array.isArray(data.projects)) {
+                            localStorage.setItem('adminProjects', JSON.stringify(data.projects));
+                            importedItems++;
+                            logInfo('ADMIN_PANEL', `${data.projects.length} Projekte importiert`);
+                        }
+                        
+                        if (data.media && Array.isArray(data.media)) {
+                            localStorage.setItem('adminMedia', JSON.stringify(data.media));
+                            importedItems++;
+                            logInfo('ADMIN_PANEL', `${data.media.length} Medien-Dateien importiert`);
+                        }
+                        
+                        logSuccess('ADMIN_PANEL', `Backup erfolgreich importiert (${importedItems} Kategorien)`);
+                        this.showSuccess('Backup importiert!');
+                        this.loadPageContent('overview');
+                    } else {
+                        logDebug('ADMIN_PANEL', 'Backup Import abgebrochen');
+                    }
+                } catch (error) {
+                    logError('ADMIN_PANEL', 'Fehler beim Backup Import', error);
                     this.showError('Ungültige Backup-Datei!');
                 }
+            };
+            reader.onerror = () => {
+                logError('ADMIN_PANEL', 'Fehler beim Lesen der Backup-Datei');
+                this.showError('Fehler beim Lesen der Datei');
             };
             reader.readAsText(file);
         };

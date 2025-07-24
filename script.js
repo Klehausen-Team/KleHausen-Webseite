@@ -7,6 +7,7 @@ class SplashScreen {
         this.isReady = false;
         this.platform = this.detectPlatform();
         
+        logInfo('SPLASH_SCREEN', 'SplashScreen Constructor aufgerufen');
         this.init();
     }
     
@@ -15,39 +16,53 @@ class SplashScreen {
         const standalone = window.navigator.standalone;
         const displayMode = window.matchMedia('(display-mode: standalone)').matches;
         
+        let platform = 'web';
+        
         if (standalone === true || displayMode) {
-            if (/iphone|ipad|ipod/.test(userAgent)) return 'ios';
-            if (/android/.test(userAgent)) return 'android';
-            if (/windows/.test(userAgent)) return 'windows';
-            if (/macintosh|mac os x/.test(userAgent)) return 'macos';
+            if (/iphone|ipad|ipod/.test(userAgent)) platform = 'ios';
+            else if (/android/.test(userAgent)) platform = 'android';
+            else if (/windows/.test(userAgent)) platform = 'windows';
+            else if (/macintosh|mac os x/.test(userAgent)) platform = 'macos';
         }
         
-        return 'web';
+        logDebug('SPLASH_SCREEN', `Platform erkannt: ${platform}`);
+        return platform;
     }
     
     init() {
-        // Prüfen ob es sich um einen PWA-Start handelt
-        const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
-                     window.navigator.standalone === true ||
-                     document.referrer.includes('android-app://');
+        logDebug('SPLASH_SCREEN', 'SplashScreen wird initialisiert');
         
-        // Bei PWA-Start oder erstem Besuch Splash Screen anzeigen
-        const shouldShowSplash = isPWA || !sessionStorage.getItem('splashShown') || 
-                                performance.navigation.type === 1; // Reload
-        
-        if (shouldShowSplash) {
-            this.show();
-            this.customizePlatform();
-            this.simulateLoading();
-        } else {
-            this.hide(true); // Sofort ausblenden
-        }
-        
-        // Page Load Event
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.onPageReady());
-        } else {
-            this.onPageReady();
+        try {
+            // Prüfen ob es sich um einen PWA-Start handelt
+            const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
+                         window.navigator.standalone === true ||
+                         document.referrer.includes('android-app://');
+            
+            // Bei PWA-Start oder erstem Besuch Splash Screen anzeigen
+            const shouldShowSplash = isPWA || !sessionStorage.getItem('splashShown') || 
+                                    performance.navigation.type === 1; // Reload
+            
+            logDebug('SPLASH_SCREEN', `Soll Splash anzeigen: ${shouldShowSplash}, isPWA: ${isPWA}`);
+            
+            if (shouldShowSplash) {
+                this.show();
+                this.customizePlatform();
+                this.simulateLoading();
+            } else {
+                this.hide(true); // Sofort ausblenden
+            }
+            
+            // Page Load Event
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => this.onPageReady());
+            } else {
+                this.onPageReady();
+            }
+            
+            logSuccess('SPLASH_SCREEN', 'SplashScreen erfolgreich initialisiert');
+            
+        } catch (error) {
+            logError('SPLASH_SCREEN', 'Fehler bei SplashScreen Initialisierung', error);
         }
         
         // Window Load Event für alle Ressourcen
